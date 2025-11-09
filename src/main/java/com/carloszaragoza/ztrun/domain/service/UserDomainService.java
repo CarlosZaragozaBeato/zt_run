@@ -10,21 +10,18 @@ public class UserDomainService {
 
     private final UserRepository userRepository;
 
-    public UserDomainService(UserRepository userRepository){
+    public UserDomainService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User validateLogin(String email, String password){
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public User validateLogin(String email, String password) {
+        User user = userRepository
+            .findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (!PasswordEncoderUtil.matches(password, user.getPassword())){
+        if (!PasswordEncoderUtil.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid Credentials.");
         }
         return user;
     }
-
-
-
-
 }
