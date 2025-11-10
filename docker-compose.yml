@@ -1,4 +1,4 @@
-version: '3.9'
+version: "3.9"
 services:
   ztrun-backend:
     build: ./backend
@@ -6,13 +6,19 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_PROFILES_ACTIVE: local
-      LOGSTASH_HOST: logstash
-      LOGSTASH_PORT: 5000
-    depends_on:
-      - logstash
+      # ... (variables existentes)
+      # Esto puede ser necesario para forzar el reinicio remoto en Docker
+      SPRING_DEVTOOLS_RESTART_ENABLED: true
     networks:
       - ztrun-net
+    # --- CAMBIOS AQUÍ ---
+    volumes:
+      # Monta el código fuente
+      - ./backend/src:/app/src
+      # Monta el target (donde se genera el JAR)
+      - ./backend/target:/app/target
+      # Monta el pom.xml para que esté disponible en el contenedor
+      - ./backend/pom.xml:/app/pom.xml
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.12.2
@@ -24,7 +30,6 @@ services:
       - ./logstash/pipeline:/usr/share/logstash/pipeline
     networks:
       - ztrun-net
-
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
