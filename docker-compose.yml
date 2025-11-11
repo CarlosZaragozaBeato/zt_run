@@ -4,10 +4,13 @@ services:
     container_name: ztrun-backend
     ports:
       - "8080:8080"
+
     environment:
       # ... (variables existentes)
       # Esto puede ser necesario para forzar el reinicio remoto en Docker
-      SPRING_DEVTOOLS_RESTART_ENABLED: true
+      SPRING_DEVTOOLS_RESTART_ENABLED:
+    depends_on:
+      - logstash
     networks:
       - ztrun-net
     # --- CAMBIOS AQUÍ ---
