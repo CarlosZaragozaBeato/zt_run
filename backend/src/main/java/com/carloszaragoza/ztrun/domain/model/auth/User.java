@@ -1,16 +1,16 @@
 package com.carloszaragoza.ztrun.domain.model.auth;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -19,6 +19,7 @@ public class User {
     private String email;
     private String password;
     private boolean enabled;
-    private Instant createdAt;
-    private Set<String> roles;
+    private LocalDateTime createdAt;
+    private Set<Role> roles;
+
 }

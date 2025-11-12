@@ -8,6 +8,9 @@ import com.carloszaragoza.ztrun.domain.service.auth.UserDomainService;
 import com.carloszaragoza.ztrun.infrastructure.configuration.JwtTokenProvider;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class UserApplicationService {
 
@@ -27,7 +30,14 @@ public class UserApplicationService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token = jwt.createToken(user.getUsername(), user.getRoles());
-        return new UserLoginResponse(token, "Bearer", jwt.getExpiryMillis());
+        Set<String> roles = user.getRoles()
+                .stream()
+                .map(role -> role.getName())
+                .collect(Collectors.toSet());
+
+        String token = jwt.generateToken(user.getUsername(), roles);
+        long expiresIn = jwt.getExpiryMillis();
+
+        return new UserLoginResponse(token, "Bearer",expiresIn);
     }
 }

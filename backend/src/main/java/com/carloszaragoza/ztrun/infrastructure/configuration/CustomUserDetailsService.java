@@ -1,9 +1,11 @@
 package com.carloszaragoza.ztrun.infrastructure.configuration;
 
-import com.carloszaragoza.ztrun.domain.service.auth.UserDomainService;
-import org.springframework.security.core.GrantedAuthority;
+import com.carloszaragoza.ztrun.domain.model.auth.User;
+import com.carloszaragoza.ztrun.domain.repository.auth.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -11,25 +13,28 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserDomainService userDomainService;
+    private final UserRepository userRepository;
 
-    public CustomUserDetailsService(UserDomainService uds) {
-        this.userDomainService = uds;
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDomainService.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + username));
+
         var authorities = user.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
+                .flatMap(role -> role.getPermissions().stream())
+                .map(permission -> new SimpleGrantedAuthority(permission.getName()))
                 .collect(Collectors.toSet());
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                user.isEnabled(),
-                true, true, true,
-                authorities
-        );
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .authorities(authorities)
+                .disabled(!user.isEnabled())
+                .build();
     }
+
 }

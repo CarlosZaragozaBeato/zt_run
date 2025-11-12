@@ -3,32 +3,36 @@ package com.carloszaragoza.ztrun.infrastructure.persistence.entity.auth;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
-import java.util.HashSet;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false, unique=true, length=50)
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable=false, unique=true, length=100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String password;
 
-    @Column(nullable=false)
+    @Builder.Default
     private boolean enabled = true;
 
-    @Column(name="created_at", columnDefinition = "TIMESTAMP")
-    private Instant createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -36,5 +40,5 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Set<RoleEntity> roles;
 }

@@ -1,68 +1,66 @@
 package com.carloszaragoza.ztrun.infrastructure.configuration;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
-import java.util.*;
-import java.util.stream.Collectors;
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.Set;
 
 @Component
 public class JwtTokenProvider {
 
-    private final Key key;
-    private final long expiryMillis;
+    private static final String SECRET_KEY = "SuperSecretKeyForJwtEncryption1234567890"; // >= 32 chars
+    private static final long EXPIRATION_TIME = 86400000L; // 24h
 
-    public JwtTokenProvider(
-            @Value("${app.jwt.secret}") String secret,
-            @Value("${app.jwt.expiration-ms}") long expiryMillis
-    ) {
-        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-        this.expiryMillis = expiryMillis;
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+
+    public String generateToken(String username, Set<String> roles) {
+        return Jwts.builder()
+                .subject(username)
+                .claim("roles", roles)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(key)
+                .compact();
     }
 
-    public String createToken(String username, Set<String> roles) {
-        long now = System.currentTimeMillis();
-        Date exp = new Date(now + expiryMillis);
+    public String generateToken(String username) {
+        return generateToken(username, Set.of());
+    }
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", roles.stream().collect(Collectors.toList()));
+    public String getUsernameFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
 
-        return Jwts.builder()
-                .setSubject(username)
-                .setClaims(claims)
-                .setIssuedAt(new Date(now))
-                .setExpiration(exp)
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
+    @SuppressWarnings("unchecked")
+    public Set<String> getRolesFromToken(String token) {
+        var claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return (Set<String>) claims.get("roles");
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    public String getUsername(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public Set<String> getRoles(String token) {
-        Object roles = Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().get("roles");
-        if (roles instanceof List<?> list) {
-            return list.stream().map(Object::toString).collect(Collectors.toSet());
-        }
-        return Collections.emptySet();
-    }
-
     public long getExpiryMillis() {
-        return expiryMillis;
+        return EXPIRATION_TIME;
     }
 }

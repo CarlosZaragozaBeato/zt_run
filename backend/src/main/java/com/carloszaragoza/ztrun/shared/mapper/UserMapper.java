@@ -17,6 +17,8 @@ public class UserMapper {
                 .createdAt(e.getCreatedAt())
                 .roles(e.getRoles().stream().map(r -> r.getName()).collect(Collectors.toSet()))
                 .build();
+        ///home/carlos/Desktop/zt_run/backend/src/main/java/com/carloszaragoza/ztrun/shared/mapper/UserMapper.java:30:38
+        //java: incompatible types: java.time.Instant cannot be converted to java.time.LocalDateTime
     }
 
     public static UserEntity toEntity(User d) {

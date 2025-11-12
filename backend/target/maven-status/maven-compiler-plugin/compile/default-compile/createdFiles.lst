@@ -1,0 +1,3 @@
+com/carloszaragoza/ztrun/ZtRunApplication.class
+com/carloszaragoza/ztrun/application/dto/auth/UserLoginRequest.class
+com/carloszaragoza/ztrun/application/dto/auth/UserLoginResponse.class
