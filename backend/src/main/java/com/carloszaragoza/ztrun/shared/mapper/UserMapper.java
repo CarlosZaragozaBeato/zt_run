@@ -1,5 +1,7 @@
 package com.carloszaragoza.ztrun.shared.mapper;
 
+import com.carloszaragoza.ztrun.domain.model.auth.Permission;
+import com.carloszaragoza.ztrun.domain.model.auth.Role;
 import com.carloszaragoza.ztrun.domain.model.auth.User;
 import com.carloszaragoza.ztrun.infrastructure.persistence.entity.auth.UserEntity;
 
@@ -15,10 +17,37 @@ public class UserMapper {
                 .password(e.getPassword())
                 .enabled(e.isEnabled())
                 .createdAt(e.getCreatedAt())
-                .roles(e.getRoles().stream().map(r -> r.getName()).collect(Collectors.toSet()))
+                .roles(
+                        e.getRoles().stream()
+                                .map(roleEntity -> {
+                                    Role role = new Role();
+                                    role.setId(roleEntity.getId());
+                                    role.setName(roleEntity.getName());
+                                    // También mapeamos los permisos
+                                    role.setPermissions(
+                                            roleEntity.getPermissions().stream()
+                                                    .map(p -> {
+                                                        Permission perm = new Permission();
+                                                        perm.setId(p.getId());
+                                                        perm.setName(p.getName());
+                                                        return perm;
+                                                    })
+                                                    .collect(Collectors.toSet())
+                                    );
+                                    return role;
+                                })
+                                .collect(Collectors.toSet())
+                )
                 .build();
+<<<<<<< HEAD
         ///home/carlos/Desktop/zt_run/backend/src/main/java/com/carloszaragoza/ztrun/shared/mapper/UserMapper.java:30:38
         //java: incompatible types: java.time.Instant cannot be converted to java.time.LocalDateTime
+=======
+        ///home/carlos/Desktop/zt_run/backend/src/main/java/com/carloszaragoza/ztrun/shared/mapper/UserMapper.java:18:17
+        //java: incompatible types: inference variable T has incompatible bounds
+        //equality constraints: com.carloszaragoza.ztrun.domain.model.auth.Role
+        //lower bounds: java.lang.String
+>>>>>>> c14c88a (subida fix login)
     }
 
     public static UserEntity toEntity(User d) {

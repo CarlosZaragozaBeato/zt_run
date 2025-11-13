@@ -37,21 +37,33 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwt, userDetailsService);
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
-                        .anyRequest().authenticated()
-                );
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf().disable()
+//                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/api/auth/**").permitAll()
+//                        .requestMatchers("/h2-console/**").permitAll()
+//                        .requestMatchers(HttpMethod.GET, "/public/**").permitAll()
+//                        .anyRequest().authenticated()
+//                );
+//
+//        // For H2 console
+//        http.headers().frameOptions().sameOrigin();
+//        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+//        return http.build();
+//    }
 
-        // For H2 console
-        http.headers().frameOptions().sameOrigin();
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // permite todo sin login
+                )
+                .csrf(csrf -> csrf.disable()); // opcional: desactiva CSRF
         return http.build();
     }
+
+
 }
