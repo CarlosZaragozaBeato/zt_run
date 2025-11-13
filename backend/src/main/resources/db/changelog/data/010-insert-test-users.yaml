@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010-insert-test-users
+      author: carlos
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: email
+                  value: admin@example.com
+              - column:
+                  name: password
+                  value: $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
+              - column:
+                  name: enabled
+                  valueBoolean: true
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: user1
+              - column:
+                  name: email
+                  value: user1@example.com
+              - column:
+                  name: password
+                  value: $2a$10$7N3gX0aC0lE4f9u1XGQ8tO5Q2A7vX3LzXJd/zy8d5S0bPhtT/A4kW
+              - column:
+                  name: enabled
+                  valueBoolean: true
+      rollback:
+        - delete:
+            tableName: users
+            where: username IN ('admin', 'user1')

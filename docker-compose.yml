@@ -1,25 +1,52 @@
 services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: ztrun-postgres
+    environment:
+      POSTGRES_DB: ztrun_db
+      POSTGRES_USER: ztrun_user
+      POSTGRES_PASSWORD: ztrun_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - ztrun-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ztrun_user -d ztrun_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   ztrun-backend:
     build: ./backend
     container_name: ztrun-backend
     ports:
       - "8080:8080"
-
     environment:
-      # ... (variables existentes)
-      # Esto puede ser necesario para forzar el reinicio remoto en Docker
-      SPRING_DEVTOOLS_RESTART_ENABLED:
+      # Configuración de PostgreSQL
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ztrun_db
+      SPRING_DATASOURCE_USERNAME: ztrun_user
+      SPRING_DATASOURCE_PASSWORD: ztrun_password
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: "true"
+
+      # DevTools
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
     depends_on:
-      - logstash
+      postgres:
+        condition: service_healthy
+      logstash:
+        condition: service_started
     networks:
       - ztrun-net
-    # --- CAMBIOS AQUÍ ---
     volumes:
-      # Monta el código fuente
       - ./backend/src:/app/src
-      # Monta el target (donde se genera el JAR)
       - ./backend/target:/app/target
-      # Monta el pom.xml para que esté disponible en el contenedor
       - ./backend/pom.xml:/app/pom.xml
 
   logstash:
@@ -39,8 +66,11 @@ services:
     environment:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
     ports:
       - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - ztrun-net
 
@@ -59,3 +89,7 @@ services:
 networks:
   ztrun-net:
     driver: bridge
+
+volumes:
+  postgres-data:
+  elasticsearch-data:

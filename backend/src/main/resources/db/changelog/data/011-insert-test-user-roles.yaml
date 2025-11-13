@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-insert-user-roles-admin
+      author: carlos
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO user_roles (user_id, role_id)
+              SELECT u.id, r.id
+              FROM users u, roles r
+              WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN';
+      rollback:
+        - sql:
+            sql: >
+              DELETE FROM user_roles
+              WHERE user_id = (SELECT id FROM users WHERE username = 'admin');
+
+  - changeSet:
+      id: 011-insert-user-roles-user1
+      author: carlos
+      changes:
+        - sql:
+            sql: >
+              INSERT INTO user_roles (user_id, role_id)
+              SELECT u.id, r.id
+              FROM users u, roles r
+              WHERE u.username = 'user1' AND r.name = 'ROLE_USER';
+      rollback:
+        - sql:
+            sql: >
+              DELETE FROM user_roles
+              WHERE user_id = (SELECT id FROM users WHERE username = 'user1');

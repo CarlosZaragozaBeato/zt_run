@@ -39,15 +39,6 @@ public class UserMapper {
                                 .collect(Collectors.toSet())
                 )
                 .build();
-<<<<<<< HEAD
-        ///home/carlos/Desktop/zt_run/backend/src/main/java/com/carloszaragoza/ztrun/shared/mapper/UserMapper.java:30:38
-        //java: incompatible types: java.time.Instant cannot be converted to java.time.LocalDateTime
-=======
-        ///home/carlos/Desktop/zt_run/backend/src/main/java/com/carloszaragoza/ztrun/shared/mapper/UserMapper.java:18:17
-        //java: incompatible types: inference variable T has incompatible bounds
-        //equality constraints: com.carloszaragoza.ztrun.domain.model.auth.Role
-        //lower bounds: java.lang.String
->>>>>>> c14c88a (subida fix login)
     }
 
     public static UserEntity toEntity(User d) {

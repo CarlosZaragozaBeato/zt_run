@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008-insert-permissions
+      author: carlos
+      changes:
+        - insert:
+            tableName: permissions
+            columns:
+              - column:
+                  name: name
+                  value: USER_CREATE
+              - column:
+                  name: description
+                  value: Permite crear usuarios
+        - insert:
+            tableName: permissions
+            columns:
+              - column:
+                  name: name
+                  value: USER_READ
+              - column:
+                  name: description
+                  value: Permite leer usuarios
+        - insert:
+            tableName: permissions
+            columns:
+              - column:
+                  name: name
+                  value: USER_UPDATE
+              - column:
+                  name: description
+                  value: Permite actualizar usuarios
+        - insert:
+            tableName: permissions
+            columns:
+              - column:
+                  name: name
+                  value: USER_DELETE
+              - column:
+                  name: description
+                  value: Permite eliminar usuarios
+        - insert:
+            tableName: permissions
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_ASSIGN
+              - column:
+                  name: description
+                  value: Permite asignar roles a usuarios
+      rollback:
+        - delete:
+            tableName: permissions
+            where: name IN ('USER_CREATE', 'USER_READ', 'USER_UPDATE', 'USER_DELETE', 'ROLE_ASSIGN')
