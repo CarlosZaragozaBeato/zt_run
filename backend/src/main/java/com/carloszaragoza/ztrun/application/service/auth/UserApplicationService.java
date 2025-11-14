@@ -1,8 +1,6 @@
 package com.carloszaragoza.ztrun.application.service.auth;
 
 
-import com.carloszaragoza.ztrun.application.dto.auth.UserLoginResponse;
-import com.carloszaragoza.ztrun.application.dto.auth.UserLoginRequest;
 import com.carloszaragoza.ztrun.domain.model.auth.User;
 import com.carloszaragoza.ztrun.domain.service.auth.UserDomainService;
 import com.carloszaragoza.ztrun.infrastructure.configuration.JwtTokenProvider;

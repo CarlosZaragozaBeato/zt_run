@@ -1,7 +1,5 @@
 package com.carloszaragoza.ztrun.presentation.controller.auth;
 
-import com.carloszaragoza.ztrun.application.dto.auth.UserLoginRequest;
-import com.carloszaragoza.ztrun.application.dto.auth.UserLoginResponse;
 import com.carloszaragoza.ztrun.application.service.auth.UserApplicationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
