@@ -3,7 +3,7 @@ package com.carloszaragoza.ztrun.shared.mapper;
 import com.carloszaragoza.ztrun.domain.model.auth.Permission;
 import com.carloszaragoza.ztrun.domain.model.auth.Role;
 import com.carloszaragoza.ztrun.domain.model.auth.User;
-import com.carloszaragoza.ztrun.infrastructure.persistence.entity.auth.UserEntity;
+import com.carloszaragoza.ztrun.infrastructure.adapter.ouput.persistence.entity.auth.UserEntity;
 
 import java.util.stream.Collectors;
 

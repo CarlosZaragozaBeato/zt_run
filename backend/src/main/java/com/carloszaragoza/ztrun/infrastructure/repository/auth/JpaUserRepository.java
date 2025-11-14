@@ -1,6 +1,6 @@
 package com.carloszaragoza.ztrun.infrastructure.repository.auth;
 
-import com.carloszaragoza.ztrun.infrastructure.persistence.entity.auth.UserEntity;
+import com.carloszaragoza.ztrun.infrastructure.adapter.ouput.persistence.entity.auth.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
