@@ -20,34 +20,34 @@ services:
       timeout: 5s
       retries: 5
 
-  ztrun-backend:
-    build: ./backend
-    container_name: ztrun-backend
-    ports:
-      - "8080:8080"
-    environment:
-      # Configuración de PostgreSQL
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ztrun_db
-      SPRING_DATASOURCE_USERNAME: ztrun_user
-      SPRING_DATASOURCE_PASSWORD: ztrun_password
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
-      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "true"
+  # ztrun-backend:
+  #   build: ./backend
+  #   container_name: ztrun-backend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     # Configuración de PostgreSQL
+  #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ztrun_db
+  #     SPRING_DATASOURCE_USERNAME: ztrun_user
+  #     SPRING_DATASOURCE_PASSWORD: ztrun_password
+  #     SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+  #     SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+  #     SPRING_JPA_HIBERNATE_DDL_AUTO: update
+  #     SPRING_JPA_SHOW_SQL: "true"
 
-      # DevTools
-      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
-    depends_on:
-      postgres:
-        condition: service_healthy
-      logstash:
-        condition: service_started
-    networks:
-      - ztrun-net
-    volumes:
-      - ./backend/src:/app/src
-      - ./backend/target:/app/target
-      - ./backend/pom.xml:/app/pom.xml
+  #     # DevTools
+  #     SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     logstash:
+  #       condition: service_started
+  #   networks:
+  #     - ztrun-net
+  #   volumes:
+  #     - ./backend/src:/app/src
+  #     - ./backend/target:/app/target
+  #     - ./backend/pom.xml:/app/pom.xml
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.12.2
