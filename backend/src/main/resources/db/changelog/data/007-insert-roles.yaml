@@ -1,27 +1,28 @@
 databaseChangeLog:
   - changeSet:
-      id: 007-insert-roles
+      id: 007-insert-role-admin
       author: carlos
       changes:
         - insert:
             tableName: roles
             columns:
-              - column:
-                  name: name
-                  value: ROLE_ADMIN
-              - column:
-                  name: description
-                  value: Administrador del sistema
-        - insert:
-            tableName: roles
-            columns:
-              - column:
-                  name: name
-                  value: ROLE_USER
-              - column:
-                  name: description
-                  value: Usuario estándar
+              - column: { name: name, value: ROLE_ADMIN }
+              - column: { name: description, value: Administrador del sistema }
       rollback:
         - delete:
             tableName: roles
-            where: name IN ('ROLE_ADMIN', 'ROLE_USER')
+            where: name = 'ROLE_ADMIN'
+
+  - changeSet:
+      id: 008-insert-role-user
+      author: carlos
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column: { name: name, value: ROLE_USER }
+              - column: { name: description, value: Usuario estándar }
+      rollback:
+        - delete:
+            tableName: roles
+            where: name = 'ROLE_USER'
