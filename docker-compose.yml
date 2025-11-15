@@ -26,7 +26,6 @@ services:
   #   ports:
   #     - "8080:8080"
   #   environment:
-  #     # Configuración de PostgreSQL
   #     SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ztrun_db
   #     SPRING_DATASOURCE_USERNAME: ztrun_user
   #     SPRING_DATASOURCE_PASSWORD: ztrun_password
@@ -34,8 +33,6 @@ services:
   #     SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
   #     SPRING_JPA_HIBERNATE_DDL_AUTO: update
   #     SPRING_JPA_SHOW_SQL: "true"
-
-  #     # DevTools
   #     SPRING_DEVTOOLS_RESTART_ENABLED: "true"
   #   depends_on:
   #     postgres:
@@ -48,6 +45,27 @@ services:
   #     - ./backend/src:/app/src
   #     - ./backend/target:/app/target
   #     - ./backend/pom.xml:/app/pom.xml
+
+  # ztrun-frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: ztrun-frontend
+  #   environment:
+  #     NODE_ENV: production
+  #     NEXT_PUBLIC_API_URL: http://ztrun-backend:8080
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - ztrun-backend
+  #   networks:
+  #     - ztrun-net
+  #   healthcheck:
+  #     test:
+  #       ["CMD-SHELL", "wget --spider --quiet http://localhost:3000 || exit 1"]
+  #     interval: 30s
+  #     timeout: 5s
+  #     retries: 3
 
   logstash:
     image: docker.elastic.co/logstash/logstash:8.12.2
@@ -93,3 +111,5 @@ networks:
 volumes:
   postgres-data:
   elasticsearch-data:
+  caddy_data:
+  caddy_config:
