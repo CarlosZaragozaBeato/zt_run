@@ -1,5 +1,8 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export async function loginUser(email: string, password: string) {
-  const res = await fetch("/api/auth/login", {
+  const url: string = `${API_URL}/api/auth/login`;
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -9,11 +12,15 @@ export async function loginUser(email: string, password: string) {
 }
 
 export async function registerUser(data: {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }) {
-  const res = await fetch("/api/auth/register", {
+  const url: string = `${API_URL}/api/auth/register`;
+  console.log(url);
+  console.log(data);
+
+  const res = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

@@ -9,12 +9,11 @@ export function useAuth() {
   }
 
   async function register(data: {
-    name: string;
+    username: string;
     email: string;
     password: string;
   }) {
     return await registerUser(data);
   }
-
   return { login, register };
 }

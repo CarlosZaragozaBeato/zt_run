@@ -18,8 +18,8 @@ export function LoginForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto">
       <Input
-        type="email"
-        placeholder="Correo electrónico"
+        type="text"
+        placeholder="Usuario"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />

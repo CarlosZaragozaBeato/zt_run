@@ -7,13 +7,13 @@ import { useAuth } from "../hooks/useAuth";
 
 export function RegisterForm() {
   const { register } = useAuth();
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    await register({ name, email, password });
+    await register({ username, email, password });
   }
 
   return (
@@ -21,8 +21,8 @@ export function RegisterForm() {
       <Input
         type="text"
         placeholder="Nombre completo"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <Input
         type="email"
