@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 export function LoginForm() {
   const { login } = useAuth();
