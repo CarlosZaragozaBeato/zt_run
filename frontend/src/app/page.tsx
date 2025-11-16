@@ -1,3 +1,3 @@
-export default function Page() {
-  return <main className="p-8"></main>;
+export default function MainPage() {
+  return <main></main>;
 }
