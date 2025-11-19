@@ -6,13 +6,15 @@ import com.carloszaragoza.ztrun.infrastructure.web.dto.LoginRequest;
 import com.carloszaragoza.ztrun.infrastructure.web.dto.LoginResponse;
 import com.carloszaragoza.ztrun.infrastructure.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
     private final AuthServicePort authService;
 
     public AuthController(AuthServicePort authService) {
@@ -30,9 +32,11 @@ public class AuthController {
         // Registrar el usuario
         User user = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
 
+
+        LOGGER.info("user {}", user);
         // Generar token de sesión inmediatamente después del registro
         String token = authService.login(user.getEmail(), request.getPassword());
-
+        LOGGER.info("token: {}", token);
         // Devolver el token como en el login
         return ResponseEntity.ok(new LoginResponse(token));
     }
