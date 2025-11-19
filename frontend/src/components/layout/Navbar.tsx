@@ -1,27 +1,26 @@
+"use client";
+
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
 
 export function Navbar() {
-  return (
-    <nav className="border-b border-border bg-background">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-semibold text-foreground">
-              Mi App
-            </Link>
-          </div>
+  const { token, logout } = useAuth();
 
-          <div className="flex items-center gap-4">
-            <Link href="/login">
-              <Button>Login</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Register</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
+  return (
+    <nav className="flex gap-4 p-4 border-b">
+      {!token ? (
+        <>
+          <Link href="/login">Login</Link>
+          <Link href="/register">Register</Link>
+        </>
+      ) : (
+        <>
+          <Link href="/dashboard">DashBoard</Link>
+          <Link href="/calendar">Calendar</Link>
+          <Link href="/profile">Profile</Link>
+          <button onClick={logout}>Logout</button>
+        </>
+      )}
     </nav>
   );
 }

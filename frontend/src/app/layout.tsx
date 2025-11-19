@@ -1,11 +1,6 @@
-// src/app/layout.tsx
 import "@/styles/globals.css";
 import { Navbar } from "@/components/layout/Navbar";
-
-export const metadata = {
-  title: "ZT RUN",
-  description: "Run legs Run",
-};
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -15,9 +10,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="min-h-screen bg-white text-gray-900">
-        <Navbar />
-
-        {children}
+        <AuthProvider>
+          <Navbar />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

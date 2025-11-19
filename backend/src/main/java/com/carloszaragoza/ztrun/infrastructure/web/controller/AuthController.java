@@ -26,8 +26,15 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+        // Registrar el usuario
         User user = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
-        return ResponseEntity.ok().build();
+
+        // Generar token de sesión inmediatamente después del registro
+        String token = authService.login(user.getEmail(), request.getPassword());
+
+        // Devolver el token como en el login
+        return ResponseEntity.ok(new LoginResponse(token));
     }
+
 }
