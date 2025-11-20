@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ importar router
+import Link from "next/link";
+import type React from "react";
 import { useAuth } from "@/context/AuthContext";
 import { loginUser } from "@/features/auth/services/apiAuth";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -52,27 +54,97 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-sm mx-auto">
-      {error && <p className="text-red-500 bg-red-100 p-2 rounded">{error}</p>}
+    <div className="w-full max-w-md mx-auto">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Bienvenido</h2>
+          <p className="text-gray-600">Inicia sesión en tu cuenta</p>
+        </div>
 
-      <input
-        type="text"
-        name="username"
-        placeholder="Usuario o Correo electrónico"
-        required
-        disabled={isLoading}
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Contraseña"
-        required
-        disabled={isLoading}
-      />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Error message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
 
-      <button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? "Accediendo..." : "Login"}
-      </button>
-    </form>
+          {/* Username/Email input */}
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Usuario o Email
+            </label>
+            <input
+              id="username"
+              type="text"
+              name="username"
+              placeholder="tu@email.com"
+              required
+              disabled={isLoading}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+            />
+          </div>
+
+          {/* Password input */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contraseña
+              </label>
+              <a
+                href="#"
+                className="text-sm text-brand-600 hover:text-brand-700 transition-colors"
+              >
+                ¿Olvidaste tu contraseña?
+              </a>
+            </div>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="••••••••"
+              required
+              disabled={isLoading}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+            />
+          </div>
+
+          {/* Remember me checkbox */}
+          <div className="flex items-center">
+            <input
+              id="remember"
+              type="checkbox"
+              className="w-4 h-4 text-brand-600 border-gray-300 rounded focus:ring-brand-500"
+            />
+            <label htmlFor="remember" className="ml-2 text-sm text-gray-700">
+              Recordarme
+            </label>
+          </div>
+
+          {/* Submit button */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-brand-500 hover:bg-brand-600 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+          >
+            {isLoading ? "Accediendo..." : "Iniciar Sesión"}
+          </button>
+        </form>
+
+        {/* Footer */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            ¿No tienes una cuenta? <Link href="/register">Regístrate</Link>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

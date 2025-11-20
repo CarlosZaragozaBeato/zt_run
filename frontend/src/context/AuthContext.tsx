@@ -1,53 +1,58 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
 
-type AuthContextType = {
+interface AuthContextType {
   token: string | null;
   login: (token: string) => void;
   logout: () => void;
-  register: (token: string) => void;
-};
+}
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
-    const savedToken = localStorage.getItem("accessToken");
-    if (savedToken) setToken(savedToken);
+    // Cargar token de localStorage al iniciar (opcional)
+    const savedToken = localStorage.getItem("auth_token");
+    if (savedToken) {
+      setToken(savedToken);
+    }
   }, []);
 
-  const login = (token: string) => {
-    setToken(token);
-    localStorage.setItem("accessToken", token);
-    router.replace("/dashboard"); // ✅ redirige al dashboard
+  const login = (newToken: string) => {
+    setToken(newToken);
+    localStorage.setItem("auth_token", newToken);
+
+    // ✅ Guardar token en cookies para middleware
+    document.cookie = `accessToken=${newToken}; path=/; secure; samesite=strict`;
   };
 
   const logout = () => {
     setToken(null);
-    localStorage.removeItem("accessToken");
-    router.replace("/login"); // ✅ redirige al login
-  };
+    localStorage.removeItem("auth_token");
 
-  const register = (token: string) => {
-    setToken(token);
-    localStorage.setItem("accessToken", token);
-    router.replace("/dashboard"); // ✅ redirige al dashboard
+    // ✅ Eliminar cookie
+    document.cookie =
+      "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout, register }}>
+    <AuthContext.Provider value={{ token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
+  const context = useContext(AuthContext);
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  return context;
 }
