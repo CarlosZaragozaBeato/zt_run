@@ -3,16 +3,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import LoginForm from "@/features/auth/components/LoginForm";
+import { useRedirectIfAuthenticated } from "@/hooks/auth/useRedirectIfAuthenticated";
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      router.push("/dashboard"); // ✅ redirige si ya está logueado
-    }
-  }, [router]);
+  useRedirectIfAuthenticated();
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50">

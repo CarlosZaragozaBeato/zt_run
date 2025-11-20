@@ -1,18 +1,12 @@
 "use client";
 
 import { RegisterForm } from "@/features/auth/components/RegisterForm";
+import { useRedirectIfAuthenticated } from "@/hooks/auth/useRedirectIfAuthenticated";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function RegisterPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      router.push("/dashboard");
-    }
-  }, [router]);
+  useRedirectIfAuthenticated();
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-gray-50">

@@ -4,8 +4,8 @@
 import { loginUser, registerUser } from "../services/apiAuth";
 
 export function useAuth() {
-  async function login(email: string, password: string) {
-    return await loginUser(email, password);
+  async function login(usernameOrEmail: string, password: string) {
+    return await loginUser({ usernameOrEmail, password });
   }
 
   async function register(data: {

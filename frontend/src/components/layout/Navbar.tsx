@@ -15,7 +15,6 @@ export function Navbar() {
         </>
       ) : (
         <>
-          <Link href="/dashboard">DashBoard</Link>
           <Link href="/calendar">Calendar</Link>
           <Link href="/profile">Profile</Link>
           <button onClick={logout}>Logout</button>
