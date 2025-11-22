@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   createContext,
   useContext,
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Cargar token de localStorage al iniciar (opcional)
@@ -51,6 +53,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // ✅ Eliminar cookie
     document.cookie =
       "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+
+    router.push("/login");
   };
 
   return (
