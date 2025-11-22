@@ -11,6 +11,7 @@ import {
 interface AuthContextType {
   token: string | null;
   login: (token: string) => void;
+  register: (token: string) => void;
   logout: () => void;
 }
 
@@ -35,6 +36,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     document.cookie = `accessToken=${newToken}; path=/; secure; samesite=strict`;
   };
 
+  const register = (newToken: string) => {
+    setToken(newToken);
+    localStorage.setItem("auth_token", newToken);
+
+    // ✅ Guardar token en cookies para middleware
+    document.cookie = `accessToken=${newToken}; path=/; secure; samesite=strict`;
+  };
+
   const logout = () => {
     setToken(null);
     localStorage.removeItem("auth_token");
@@ -45,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, register }}>
       {children}
     </AuthContext.Provider>
   );

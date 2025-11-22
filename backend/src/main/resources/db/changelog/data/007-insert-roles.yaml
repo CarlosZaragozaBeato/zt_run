@@ -6,12 +6,12 @@ databaseChangeLog:
         - insert:
             tableName: roles
             columns:
-              - column: { name: name, value: ROLE_ADMIN }
+              - column: { name: name, value: ADMIN }
               - column: { name: description, value: Administrador del sistema }
       rollback:
         - delete:
             tableName: roles
-            where: name = 'ROLE_ADMIN'
+            where: name = 'ADMIN'
 
   - changeSet:
       id: 008-insert-role-user
@@ -20,9 +20,9 @@ databaseChangeLog:
         - insert:
             tableName: roles
             columns:
-              - column: { name: name, value: ROLE_USER }
+              - column: { name: name, value: USER }
               - column: { name: description, value: Usuario estándar }
       rollback:
         - delete:
             tableName: roles
-            where: name = 'ROLE_USER'
+            where: name = 'USER'

@@ -27,15 +27,15 @@ databaseChangeLog:
   - include:
       file: data/007-insert-roles.yaml
       relativeToChangelogFile: true
-  - include:
-      file: data/008-insert-permissions.yaml
-      relativeToChangelogFile: true
-  - include:
-      file: data/009-insert-role-permissions.yaml
-      relativeToChangelogFile: true
-  - include:
-      file: data/010-insert-test-users.yaml
-      relativeToChangelogFile: true
-  - include:
-      file: data/011-insert-test-user-roles.yaml
-      relativeToChangelogFile: true
+#  - include:
+#      file: data/008-insert-permissions.yaml
+#      relativeToChangelogFile: true
+#  - include:
+#      file: data/009-insert-role-permissions.yaml
+#      relativeToChangelogFile: true
+#  - include:
+#      file: data/010-insert-test-users.yaml
+#      relativeToChangelogFile: true
+#  - include:
+#      file: data/011-insert-test-user-roles.yaml
+#      relativeToChangelogFile: true

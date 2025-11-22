@@ -6,11 +6,13 @@ databaseChangeLog:
         - sql:
             sql: >
               INSERT INTO user_roles (user_id, role_id)
-              SELECT u.id, r.id FROM users u, roles r WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN';
+              SELECT u.id, r.id FROM users u, roles r
+              WHERE u.username = 'admin' AND r.name = 'ADMIN';
       rollback:
         - sql:
             sql: >
-              DELETE FROM user_roles WHERE user_id = (SELECT id FROM users WHERE username = 'admin')
+              DELETE FROM user_roles
+              WHERE user_id = (SELECT id FROM users WHERE username = 'admin')
 
   - changeSet:
       id: 019-insert-user-role-user1
@@ -19,8 +21,10 @@ databaseChangeLog:
         - sql:
             sql: >
               INSERT INTO user_roles (user_id, role_id)
-              SELECT u.id, r.id FROM users u, roles r WHERE u.username = 'user1' AND r.name = 'ROLE_USER';
+              SELECT u.id, r.id FROM users u, roles r
+              WHERE u.username = 'user1' AND r.name = 'USER';
       rollback:
         - sql:
             sql: >
-              DELETE FROM user_roles WHERE user_id = (SELECT id FROM users WHERE username = 'user1')
+              DELETE FROM user_roles
+              WHERE user_id = (SELECT id FROM users WHERE username = 'user1')

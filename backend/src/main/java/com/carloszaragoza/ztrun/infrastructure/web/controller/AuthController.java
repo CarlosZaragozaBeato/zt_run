@@ -1,5 +1,6 @@
 package com.carloszaragoza.ztrun.infrastructure.web.controller;
 
+import com.carloszaragoza.ztrun.domain.exception.login.InvalidCredentialsException;
 import com.carloszaragoza.ztrun.domain.model.User;
 import com.carloszaragoza.ztrun.domain.port.AuthServicePort;
 import com.carloszaragoza.ztrun.infrastructure.web.dto.LoginRequest;
@@ -10,6 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,16 +32,14 @@ public class AuthController {
         return ResponseEntity.ok(new LoginResponse(token));
     }
 
+
+
     @PostMapping("/register")
     public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
         // Registrar el usuario
         User user = authService.register(request.getUsername(), request.getEmail(), request.getPassword());
-
-
-        LOGGER.info("user {}", user);
         // Generar token de sesión inmediatamente después del registro
         String token = authService.login(user.getEmail(), request.getPassword());
-        LOGGER.info("token: {}", token);
         // Devolver el token como en el login
         return ResponseEntity.ok(new LoginResponse(token));
     }

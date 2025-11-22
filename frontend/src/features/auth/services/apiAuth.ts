@@ -13,6 +13,8 @@ export async function loginUser(data: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+  console.log(`${url}  \n ${res.text}`);
+
   if (!res.ok) throw new Error("Error en login");
   return res.json();
 }
@@ -29,6 +31,7 @@ export async function registerUser(data: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+  console.log(`${url}  \n ${res.text}`);
 
   if (!res.ok) throw new Error("Error en registro");
   return res.json();

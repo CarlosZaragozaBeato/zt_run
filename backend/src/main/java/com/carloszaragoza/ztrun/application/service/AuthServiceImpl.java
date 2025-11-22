@@ -1,5 +1,6 @@
 package com.carloszaragoza.ztrun.application.service;
 
+import com.carloszaragoza.ztrun.domain.exception.login.InvalidCredentialsException;
 import com.carloszaragoza.ztrun.domain.model.Role;
 import com.carloszaragoza.ztrun.domain.model.User;
 import com.carloszaragoza.ztrun.domain.port.AuthServicePort;
@@ -31,13 +32,14 @@ public class AuthServiceImpl implements AuthServicePort {
     public String login(String usernameOrEmail, String passwordPlain) {
         User user = userRepo.findByUsername(usernameOrEmail)
                 .or(() -> userRepo.findByEmail(usernameOrEmail))
-                .orElseThrow(() -> new IllegalArgumentException("Credenciales inválidas"));
+                .orElseThrow(InvalidCredentialsException::new);
 
         if (!user.isEnabled() || !passwordEncoder.matches(passwordPlain, user.getPasswordHash())) {
-            throw new IllegalArgumentException("Credenciales inválidas");
+            throw new InvalidCredentialsException();
         }
         return jwt.createToken(user);
     }
+
 
     @Override
     public User register(String username, String email, String passwordPlain) {
