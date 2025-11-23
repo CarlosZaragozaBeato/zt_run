@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-insert-test-goals
+      author: carlos
+      changes:
+        - insert:
+            tableName: goals
+            columns:
+              - column: { name: name, value: "Lose 5kg" }
+              - column: { name: description, value: "Weight loss goal for the month" }
+              - column: { name: type, value: "MONTHLY" }
+              - column: { name: category, value: "FITNESS" }
+              - column: { name: priority, value: "HIGH" }
+              - column: { name: status, value: "PENDING" }
+              - column: { name: user_id, valueComputed: "(SELECT id FROM users WHERE username = 'user1')" }
+        - insert:
+            tableName: goals
+            columns:
+              - column: { name: name, value: "Learn Spring Boot" }
+              - column: { name: description, value: "Master the framework" }
+              - column: { name: type, value: "LONG_TERM" }
+              - column: { name: category, value: "LEARNING" }
+              - column: { name: priority, value: "MEDIUM" }
+              - column: { name: status, value: "IN_PROGRESS" }
+              - column: { name: user_id, valueComputed: "(SELECT id FROM users WHERE username = 'user1')" }
+        - insert:
+            tableName: goals
+            columns:
+              - column: { name: name, value: "Daily Meditation" }
+              - column: { name: description, value: "10 mins mindfulness" }
+              - column: { name: type, value: "DAILY" }
+              - column: { name: category, value: "PERSONAL" }
+              - column: { name: priority, value: "LOW" }
+              - column: { name: status, value: "PENDING" }
+              - column: { name: user_id, valueComputed: "(SELECT id FROM users WHERE username = 'user1')" }

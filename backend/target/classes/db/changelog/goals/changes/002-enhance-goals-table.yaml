@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-enhance-goals-table
+      author: carlos
+      changes:
+        - addColumn:
+            tableName: goals
+            columns:
+              - column:
+                  name: type
+                  type: VARCHAR(20)
+                  defaultValue: LONG_TERM
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  defaultValue: PERSONAL
+              - column:
+                  name: priority
+                  type: VARCHAR(20)
+                  defaultValue: MEDIUM
+              - column:
+                  name: start_date
+                  type: DATE
+              - column:
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: progress
+                  type: INT
+                  defaultValue: 0
+              - column:
+                  name: parent_goal_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_goals_parent
+                    references: goals(id)
