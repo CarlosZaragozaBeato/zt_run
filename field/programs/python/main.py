@@ -1,9 +1,56 @@
 from typing import List
 from collections import defaultdict
+import heapq
 
 
 def main():
     pass
+
+
+def tok_k_frequent(nums, k):
+    # Step 1: Count frequencies
+    frequency_map = {}
+    for num in nums:
+        frequency_map[num] = frequency_map.get(num, 0) + 1
+    # Step 2: Sort by frequency (descending)
+    sorted_nums = sorted(
+        frequency_map.keys(), key=lambda x: frequency_map[x], reverse=True
+    )
+    # Step 3: Return top k
+    return sorted_nums[:k]
+
+
+def top_k_frequent_bucket_sort(nums, k):
+    frequency_map = {}
+    for num in nums:
+        frequency_map[num] = frequency_map.get(num, 0) + 1
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for num, freq in frequency_map.items():
+        buckets[freq].append(num)
+    result = []
+    for i in range(len(buckets) - 1, -1, -1):
+        result.extend(buckets[i])
+        if len(result) >= k:
+            return result[:k]
+    return result
+
+
+def top_k_frequent_heap(nums, k):
+    # Step 1: Count frequencies
+    frequency_map = {}
+    for num in nums:
+        frequency_map[num] = frequency_map.get(num, 0) + 1
+
+    # Step 2: Min heap of size k
+    # Python's heapq is a min heap, so we use (frequency, num) tuples
+    heap = []
+    for num, freq in frequency_map.items():
+        heapq.heappush(heap, (freq, num))
+        if len(heap) > k:
+            heapq.heappop(heap)  # Remove least frequent
+
+    # Step 3: Extract numbers from heap
+    return [num for _, num in heap]
 
 
 def group_anagrams(strs):

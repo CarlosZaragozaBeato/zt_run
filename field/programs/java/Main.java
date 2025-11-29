@@ -5,6 +5,74 @@ public class Main {
 
   }
 
+  public int[] topKFrequent(int[] nums, int k) {
+    // Step 1: Count Frequencies
+    Map<Integer, Integer> frequencyMap = new HashMap<>();
+    for (int num : nums) {
+      frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+    }
+    // Step 2: Convert to list and sort by frequency
+    List<Integer> uniqueNums = new ArrayList<>(frequencyMap.keySet());
+    uniqueNums.sort((a, b) -> frequencyMap.get(b) - frequencyMap.get(a));
+    // Step 3: Get top k elements
+    int[] result = new int[k];
+    for (int i = 0; i < k; i++) {
+      result[i] = uniqueNums.get(i);
+    }
+    return result;
+  }
+
+  public int[] topKFrequentBuckeSort(int[] nums, int k) {
+    Map<Integer, Integer> frequencyMap = new HashMap<>();
+    for (int num : nums) {
+      frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+    }
+    List<Integer>[] buckets = new List[nums.length + 1];
+    for (int num : frequencyMap.keySet()) {
+      int freq = frequencyMap.keySet();
+      if (buckets[freq] == null) {
+        buckets[freq] = new ArrayList<>();
+      }
+      buckets[freq].add(num);
+    }
+    int[] result = new int[k];
+    int index = 0;
+    for (int i = buckets.length - 1; i >= 0 && index < k; i--) {
+      if (buckets[i] != null) {
+        for (int num : buckets[i]) {
+          result[index++] = num;
+          if (index == k)
+            break;
+        }
+      }
+    }
+    return result;
+  }
+
+  public int[] topKFrequentMinHeap(int[] nums, int k) {
+    // Step 1: Count Frequencies
+    Map<Integer, Integer> frequencyMap = new HashMap<>();
+    for (int num : nums) {
+      frequencyMap.put(num, frequencyMap.getOrDefault(num, 0) + 1);
+    }
+    // Step 2: Min heap of size k (sorted by frequency)
+    PriorityQueue<Integer> heap = new PriorityQueue<>(
+        (a, b) -> frequencyMap.get(a) - frequencyMap.get(b));
+    // Step 3: Maintain heap of size k
+    for (int num : frequencyMap.keySet()) {
+      heap.offer(num);
+      if (heap.size() > k) {
+        heap.poll(); // Remove least frequent
+      }
+    }
+    // Step 4: Extract result
+    int[] result = new int[k];
+    for (int i = 0; i < k; i++) {
+      result[i] = heap.poll();
+    }
+    return result;
+  }
+
   public static List<List<String>> groupAnagrams(String[] strs) {
     // Step 1 : Create a HashMap to store groups
     Map<String, List<String>> anagramGroups = new HashMap<>();
