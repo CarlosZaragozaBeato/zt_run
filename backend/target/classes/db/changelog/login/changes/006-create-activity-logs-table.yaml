@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-activity-logs-table
+      author: carlos
+      changes:
+        - createTable:
+            tableName: activity_logs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: action
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: ip_address
+                  type: VARCHAR(45)
+        - addForeignKeyConstraint:
+            baseTableName: activity_logs
+            baseColumnNames: user_id
+            constraintName: fk_activity_user
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: SET NULL
+      rollback:
+        - dropTable:
+            tableName: activity_logs
