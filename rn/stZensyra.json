@@ -1,0 +1,19 @@
+{
+        "projectName": "ZtRun",
+        "versionSetup": "0.1",
+        "createdBy": "Zensyra",
+        "created": "2025-07-19",
+        "features":[
+            {
+                "id": 1,
+                "name": "vite + react",
+                "type": "frontend"
+            },
+            {
+                "id": 2,
+                "name": "fastify + prisma",
+                "type": "backend"
+            }
+        ],
+        "lastUpdate": "2025-07-19"
+}
