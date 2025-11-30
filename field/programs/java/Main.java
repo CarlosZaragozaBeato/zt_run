@@ -5,6 +5,49 @@ public class Main {
 
   }
 
+  /**
+   * Encodes a list of strings to a single string
+   * Format: <length>#<string><length>#<string>
+   */
+  public String encode(List<String> strs) {
+    StringBuilder encoded = new StringBuilder();
+    for (String str : strs) {
+      // Append: length + '#' + actual string
+      encoded.append(str.length())
+          .append('#')
+          .append(str);
+    }
+    return encoded.toString();
+  }
+
+  /**
+   * Decodes a single string to a list of strings.
+   */
+  public List<String> decode(String str) {
+    List<String> decoded = new ArrayList<>();
+    int i = 0;
+    while (i < str.length()) {
+      // Find the delimiter '#'
+      int delimiterIndex = str.indexOf('#', i);
+
+      // Extract the length
+      int length = Integer.parseInt(str.substring(i, delimiterIndex));
+
+      // Move past the '#'
+      i = delimiterIndex + 1;
+
+      // Extract the string of specified length
+      String original = str.substring(i, i + length);
+      decoded.add(original);
+
+      // Move to the next encoded string
+      i += length;
+
+    }
+
+    return decoded;
+  }
+
   public int[] topKFrequent(int[] nums, int k) {
     // Step 1: Count Frequencies
     Map<Integer, Integer> frequencyMap = new HashMap<>();

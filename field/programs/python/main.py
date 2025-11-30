@@ -7,6 +7,42 @@ def main():
     pass
 
 
+def encode(strs: List[str]) -> str:
+    """
+        Encodes a list of strings to a single string.
+        Format: <length>#<string><length>#<string>...
+    """
+    encoded = ""
+    for s in strs:
+        # Append: length + '#' + actual string 
+        encoded += str(len(s)) + "#" + s 
+    return encoded
+
+def decode(s: str) -> List[str]:
+    """
+    Decodes a single string to a list of strings 
+    """
+    decoded = []
+    i = 0
+    while i < len(s):
+        # Find the delimiter '#'
+        delimiter_index = s.index('#', i)
+        # Extract the length
+        length = int(s[i:delimiter_index])
+        # Move past the '#'
+        i = delimiter_index + 1
+        # Extract the string of specified length
+        original = s[i:i+length]
+        decoded.append(original)
+
+        # Move to the next encoded string
+        i += length
+    return decoded
+
+
+
+
+
 def tok_k_frequent(nums, k):
     # Step 1: Count frequencies
     frequency_map = {}
