@@ -6,41 +6,79 @@ import heapq
 def main():
     pass
 
+def product_except_self(nums):
+    """
+    Returns array where output[i] is product of all elements except nums[i]
+    Time: 0(n), Space: 0(1) excluding output array
+    Args: 
+        nums: List of integers
+    Returns: 
+        List of integers representing products
+    """
+    n = len(nums)
+    output = [1] * n 
+
+    # Step 1: Calculate left products (prefix products)
+    # Output[i] contains product of all elements to the left of i
+    left_product = 1
+    for i in range(n):
+        output[i] = left_product
+        left_product *= nums[i]
+    # Step 2: Calculate right products (suffix products) and multiply
+    # right_product tracks product of all element to the right
+    right_product = 1 
+    for i in range(n - 1, -1, -1):
+        output[i] *= right_product
+        right_product *= nums[i]
+    return output
+
+def product_except_self_v2(nums):
+    """Alternative implementation with explicit left/right arrays for clarity"""
+    n = len(nums)
+    output = [1] * n
+    # Build left products 
+    for i in range(1, n):
+        output[i] = output[i - 1] * nums[i - 1]
+    # Build right products and multiply 
+    right_product = 1
+    for i in range(n - 1, -1, -1):
+        output[i] = output[i] * right_product
+        right_product *= nums[i]
+    return output
+
 
 def encode(strs: List[str]) -> str:
     """
-        Encodes a list of strings to a single string.
-        Format: <length>#<string><length>#<string>...
+    Encodes a list of strings to a single string.
+    Format: <length>#<string><length>#<string>...
     """
     encoded = ""
     for s in strs:
-        # Append: length + '#' + actual string 
-        encoded += str(len(s)) + "#" + s 
+        # Append: length + '#' + actual string
+        encoded += str(len(s)) + "#" + s
     return encoded
+
 
 def decode(s: str) -> List[str]:
     """
-    Decodes a single string to a list of strings 
+    Decodes a single string to a list of strings
     """
     decoded = []
     i = 0
     while i < len(s):
         # Find the delimiter '#'
-        delimiter_index = s.index('#', i)
+        delimiter_index = s.index("#", i)
         # Extract the length
         length = int(s[i:delimiter_index])
         # Move past the '#'
         i = delimiter_index + 1
         # Extract the string of specified length
-        original = s[i:i+length]
+        original = s[i : i + length]
         decoded.append(original)
 
         # Move to the next encoded string
         i += length
     return decoded
-
-
-
 
 
 def tok_k_frequent(nums, k):
