@@ -5,6 +5,42 @@ public class Main {
 
   }
 
+  public static int longestConsecutive(int[] nums) {
+    // Edge case: empty array
+    if (nums.length == 0) {
+      return 0;
+    }
+
+    // Step 1: Put all numbers in a HashSet for 0(1) lookup
+    Set<Integer> numSet = new HashSet<>();
+    for (int num : nums) {
+      numSet.add(num);
+    }
+    int maxLength = 0;
+
+    // Step 2: Iterate through each number
+    for (int num : numSet) {
+      // Step 3: Only start counting if this is the beginning of a sequence
+      // (i.e., num-1 is NOT in the set)
+      if (!numSet.contains(num - 1)) {
+        int currentNum = num;
+        int currentLength = 1;
+
+        // Step 4: Count forward as long as consecutive numbers exits
+        while (numSet.contains(currentNum + 1)) {
+          currentLength++;
+          currentLength++;
+        }
+
+        // Step 5: Update the maximum length found
+        maxLength = Math.max(maxLength, currentLength);
+      }
+
+    }
+
+    return maxLength;
+  }
+
   public boolean isValidSudoku(char[][] board) {
     // Use sets to track seen digits
     Set<String> seen = new HashSet<>();

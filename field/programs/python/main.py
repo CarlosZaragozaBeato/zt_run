@@ -6,38 +6,65 @@ import heapq
 def main():
     pass
 
-def isValidSudoku(board:List[List[str]]) -> bool:
-    # Use sets to track seen digits 
+
+def longestConsecutive(nums: List[int]) -> int:
+    # Edge case: empty array
+    if not nums:
+        return 0
+
+    # Step 1: Put all the numbers in a set for 0(1) lookup
+    num_set = set(nums)
+    max_length = 0
+
+    # Step 2: Iterate through each number
+    for num in num_set:
+        # Step 3: Only start counting if this is the beginning of a sequence
+        # (i.e., num-1 is NOT in the set)
+        if num - 1 not in num_set:
+            current_num = num
+            current_length = 1
+
+            # Step 4: Count forward as long consecutive numbers exists
+            while current_num + 1 in num_set:
+                current_num += 1
+                current_length = 1
+
+                # Step 5: Update the maximum length found
+                max_length = max(max_length, current_length)
+    return max_length
+
+
+def isValidSudoku(board: List[List[str]]) -> bool:
+    # Use sets to track seen digits
     seen = set()
     for i in range(9):
         for j in range(9):
             current = board[i][j]
-            if current != '.':
+            if current != ".":
                 # Create unique identifiers for row,column and box
                 row_check = f"{current} in row {j}"
                 col_check = f"{current} in col {j}"
-                box_check = f"{current} in box {i//3}-{j//3}"
-                # If any identifiers already exists, we have a duplicate 
+                box_check = f"{current} in box {i // 3}-{j // 3}"
+                # If any identifiers already exists, we have a duplicate
                 if row_check in seen or col_check in seen or box_check in seen:
-                    return False 
+                    return False
                 seen.add(row_check)
                 seen.add(col_check)
                 seen.add(box_check)
     return True
 
 
-
 def product_except_self(nums):
     """
     Returns array where output[i] is product of all elements except nums[i]
     Time: 0(n), Space: 0(1) excluding output array
-    Args: 
+    Args:
         nums: List of integers
-    Returns: 
+    Returns:
         List of integers representing products
     """
     n = len(nums)
-    output = [1] * n 
+    output = [1] * n
 
     # Step 1: Calculate left products (prefix products)
     # Output[i] contains product of all elements to the left of i
@@ -47,20 +74,21 @@ def product_except_self(nums):
         left_product *= nums[i]
     # Step 2: Calculate right products (suffix products) and multiply
     # right_product tracks product of all element to the right
-    right_product = 1 
+    right_product = 1
     for i in range(n - 1, -1, -1):
         output[i] *= right_product
         right_product *= nums[i]
     return output
 
+
 def product_except_self_v2(nums):
     """Alternative implementation with explicit left/right arrays for clarity"""
     n = len(nums)
     output = [1] * n
-    # Build left products 
+    # Build left products
     for i in range(1, n):
         output[i] = output[i - 1] * nums[i - 1]
-    # Build right products and multiply 
+    # Build right products and multiply
     right_product = 1
     for i in range(n - 1, -1, -1):
         output[i] = output[i] * right_product
