@@ -6,6 +6,27 @@ import heapq
 def main():
     pass
 
+def isValidSudoku(board:List[List[str]]) -> bool:
+    # Use sets to track seen digits 
+    seen = set()
+    for i in range(9):
+        for j in range(9):
+            current = board[i][j]
+            if current != '.':
+                # Create unique identifiers for row,column and box
+                row_check = f"{current} in row {j}"
+                col_check = f"{current} in col {j}"
+                box_check = f"{current} in box {i//3}-{j//3}"
+                # If any identifiers already exists, we have a duplicate 
+                if row_check in seen or col_check in seen or box_check in seen:
+                    return False 
+                seen.add(row_check)
+                seen.add(col_check)
+                seen.add(box_check)
+    return True
+
+
+
 def product_except_self(nums):
     """
     Returns array where output[i] is product of all elements except nums[i]
