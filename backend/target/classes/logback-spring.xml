@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+    <!-- === PROPIEDADES GLOBALES === -->
+    <property name="LOG_PATH" value="./logs" />
+    <property name="APP_NAME" value="my-springboot-app" />
+    <property name="LOGSTASH_HOST" value="logstash" />
+    <property name="LOGSTASH_PORT" value="5000" />
+
+    <!-- === CONSOLE APPENDER (JSON estructurado para desarrollo) === -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <pattern>
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "thread": "%thread",
+                        "logger": "%logger",
+                        "message": "%message",
+                        "trace": "%ex{5}",
+                        "app": "${APP_NAME}",
+                        "env": "${spring.profiles.active:-local}"
+                        }
+                    </pattern>
+                </pattern>
+                <mdc />
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- === FILE APPENDER (rotación diaria) === -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${APP_NAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/${APP_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp />
+                <pattern>
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "thread": "%thread",
+                        "logger": "%logger",
+                        "message": "%message",
+                        "trace": "%ex{5}",
+                        "app": "${APP_NAME}",
+                        "env": "${spring.profiles.active:-local}"
+                        }
+                    </pattern>
+                </pattern>
+                <mdc />
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- === LOGSTASH APPENDER (para ELK o Loki) === -->
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!-- Usa el nombre del servicio Docker en lugar de localhost -->
+        <destination>${LOGSTASH_HOST}:${LOGSTASH_PORT}</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
+        <keepAliveDuration>5 minutes</keepAliveDuration>
+        <reconnectionDelay>30000</reconnectionDelay>
+    </appender>
+
+    <!-- === NIVELES DE LOG === -->
+    <logger name="org.springframework" level="INFO" />
+    <logger name="com.carloszaragoza" level="DEBUG" />
+
+    <!-- === ROOT LOGGER === -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="LOGSTASH" />
+    </root>
+</configuration>

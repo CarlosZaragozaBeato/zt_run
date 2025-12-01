@@ -1,0 +1,6 @@
+:80 {
+  reverse_proxy /api/* ztrun-backend:8080
+  reverse_proxy /* ztrun-frontend:3000
+  encode zstd gzip
+  header Cache-Control "public, max-age=3600"
+}
