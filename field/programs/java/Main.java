@@ -5,6 +5,54 @@ public class Main {
 
   }
 
+  public int[] twoSumV2(int[] numbers, int target) {
+    // Two pointer: left at start, right at end //
+    int left = 0;
+    int right = numbers.length - 1;
+
+    while (left < right) {
+      int currentSum = numbers[left] + numbers[right];
+
+      if (currentSum == target) {
+        /** Found the answer! Return 1-indexed positions **/
+        return new int[] { left + 1, right + 1 };
+      } else if (currentSum < target) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+    /* Should never reach here (problem guarantees a solution) */
+    return new int[] { -1, -1 };
+  }
+
+  public static boolean isPalindrome(String s) {
+    // Two pointers: left start at beginning, right at end
+    int left = 0;
+    int right = s.length() - 1;
+
+    while (left < right) {
+      // Skip non-alphanumeric characters from left
+      while (left < right && !Character.isLetterOrDigit(s.charAt(left))) {
+        left++;
+      }
+
+      // Skip non-alphanumeric characters from right
+      while (left < right && !Character.isLetterOrDigit(s.charAt(right))) {
+        right--;
+      }
+      // Compare characters (case-insensitive)
+      if (Character.toLowerCase(s.charAt(left)) != Character.toLowerCase(s.charAt(right))) {
+        return false;
+      }
+
+      // Move both pointers inward
+      left++;
+      right--;
+    }
+    return true;
+  }
+
   public static int longestConsecutive(int[] nums) {
     // Edge case: empty array
     if (nums.length == 0) {

@@ -7,6 +7,50 @@ def main():
     pass
 
 
+def twoSumsV2(numbers: List[int], target: int) -> List[int]:
+    # Two pointers: left at start, right at end
+    left = 0
+    right = len(numbers) - 1
+
+    while left < right:
+        current_sum = numbers[left] + numbers[right]
+
+        if current_sum == target:
+            # Fount the answer! Return 1-indexed position
+            return [left + 1, right + 1]
+        elif current_sum < target:
+            # Sum too small, need larger number
+            left += 1
+        else:
+            # Sum too large, need smaller number
+            right -= 1
+    # Should never reach here (problem guarantees a solution)
+    return [-1, -1]
+
+
+def isPalindrome(s: str) -> bool:
+    # Two pointers: left starts at beginning, right at end
+    left = 0
+    right = len(s) - 1
+
+    while left < right:
+        # Skip non-alphanumeric characters from left
+        while left < right and not s[left].isalnum():
+            left += 1
+
+        # Skip non-alphanumeric characters from right
+        while left < right and not s[right].isalnum():
+            right -= 1
+
+        # Compare characters (case - insensitive)
+        if s[left].lower() != s[right].lower():
+            return False
+        # Move both pointers inwards
+        left += 1
+        right -= 1
+    return True
+
+
 def longestConsecutive(nums: List[int]) -> int:
     # Edge case: empty array
     if not nums:
