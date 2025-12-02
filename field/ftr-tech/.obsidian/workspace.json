@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "d0fe6a0f06b35dd1",
+        "id": "538c220606acca64",
         "type": "tabs",
         "children": [
           {
-            "id": "4c33dd7cf4034095",
+            "id": "aabe43c21306444d",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -181,10 +181,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "4c33dd7cf4034095",
+  "active": "aabe43c21306444d",
   "lastOpenFiles": [
-    "Untitled.md",
+    "guitar/routine.md",
     "phase1/Phase 1.md",
+    "guitar",
     "phases/phases.md",
     "phases",
     "20251201_FIELDS.md",
