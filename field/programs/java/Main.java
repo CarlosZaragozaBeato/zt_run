@@ -5,6 +5,58 @@ public class Main {
 
   }
 
+  public static int maxArea(int[] height) {
+    int left = 0;
+    int right = height.length - 1;
+    int maxWater = 0;
+
+    while (left < right) {
+      int width = right - left;
+      int currentHeight = Math.min(height[left], height[right]);
+      int currentArea = width * currentHeight;
+
+      maxWater = Math.max(maxWater, currentArea);
+
+      if (height[left] < height[right]) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+    return maxWater;
+  }
+
+  public static List<List<Integer>> threeSum(int[] nums) {
+    List<List<Integer>> result = new ArrayList<>();
+    Arrays.sort(nums);
+
+    for (int i = 0; i < nums.length - 2; i++) {
+      if (i > 0 && nums[i] == nums[i - 1])
+        continue;
+
+      int left = i + 1;
+      int right = nums.length - 1;
+      int target = -nums[i];
+      if (sum == target) {
+        while (left < right) {
+          result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+
+          while (left < right && nums[left] == nums[left + 1])
+            left++;
+          while (left < right && nums[right] == nums[right - 1])
+            right--;
+
+          left++;
+          right--;
+        }
+      } else if (sum < target) {
+        left++;
+      } else {
+        right--;
+      }
+    }
+  }
+
   public int[] twoSumV2(int[] numbers, int target) {
     // Two pointer: left at start, right at end //
     int left = 0;

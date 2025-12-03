@@ -7,6 +7,71 @@ def main():
     pass
 
 
+def maxAreaAlternative(height: List[int]) -> int:
+    left, right = 0, len(height) - 1
+    max_water = 0
+
+    while left < right:
+        max_water = max(max_water, min(height[left], height[right]) * (right - left))
+        if height[left] < height[right]:
+            left -= 1
+        else:
+            right += 1
+    return max_water
+
+
+def maxArea(height: List[int]) -> int:
+    left = 0
+    right = len(height) - 1
+    max_water = 0
+
+    while left < right:
+        width = right - left
+        current_height = min(height[left], height[right])
+        current_area = width * current_height
+
+        max_water = max(max_water, current_area)
+
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+
+    return max_water
+
+
+def threeSum(nums: List[int]) -> List[List[int]]:
+    result = []
+    nums.sort()
+
+    for i in range(len(nums) - 2):
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+
+        left = i + 1
+        right = len(nums) - 1
+        target = -nums[i]
+
+        while left < right:
+            current_sum = nums[left] + nums[right]
+            if current_sum == target:
+                result.append([nums[i], nums[left], nums[right]])
+
+                while left < right and nums[left] == nums[left + 1]:
+                    left += 1
+
+                while left < right and nums[right] == nums[right - 1]:
+                    right -= 1
+
+                left += 1
+                right -= 1
+            elif current_sum < target:
+                left += 1
+            else:
+                right -= 1
+    return result
+
+
 def twoSumsV2(numbers: List[int], target: int) -> List[int]:
     # Two pointers: left at start, right at end
     left = 0
