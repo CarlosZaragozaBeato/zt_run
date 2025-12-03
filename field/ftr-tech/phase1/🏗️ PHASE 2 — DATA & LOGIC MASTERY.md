@@ -6,6 +6,7 @@ Think of data structures as different ways to organize books: you could stack th
 ## Linear vs Non-linear structures
 This is a fundamental classification based on how data elements are arranged and accessed.
 
+ss
 ## **Linear Data Structures**
 In linear structures, elements are arranged sequentially—one after another in a single level. Each element has exactly one predecessor (except the first) and exactly one successor (except the last). You traverse them in a specific order.
 Think of it like a line of people waiting: each person knows who's in front and who's behind.
