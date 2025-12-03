@@ -1713,6 +1713,7 @@ With **mutability**:
     - Mutexes
     - Semaphores
     - Atomic operations
+
 With **immutability**:
 - Multiple threads can read safely
 - No locking required for reads

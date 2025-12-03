@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "phase1/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
+                "file": "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations)"
+              "title": "🏗️ PHASE 2 — DATA & LOGIC MASTERY"
             }
           }
         ]
@@ -183,12 +183,13 @@
   },
   "active": "aabe43c21306444d",
   "lastOpenFiles": [
-    "guitar/routine.md",
-    "phase1/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
-    "guitar",
     "phases/phases.md",
-    "phases",
+    "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
     "20251201_FIELDS.md",
+    "phase1/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
+    "guitar/routine.md",
+    "guitar",
+    "phases",
     "phase1"
   ]
 }
