@@ -5,6 +5,52 @@ public class Main {
 
   }
 
+
+  public static int maxProfit(int[] prices){
+    if (prices == null || prices.length==0) return 0;
+
+    int minPrice = prices[0];
+    int maxProfit = 0;
+
+    for (int i = 0; i < prices.length; i++) {
+      int profit = prices[i] - minPrice;
+      maxProfit = Math.max(maxProfit, profit);
+      minPrice = Math.min(minPrice, prices[i]);
+    }
+    return maxProfit;
+  }
+
+
+
+  public static int trap(int[] height) {
+    if (height == null || height.length == 0)
+      return 0;
+
+    int left = 0, right = height.length - 1;
+    int leftMax = 0, rightMax = 0;
+    int water = 0;
+
+    while (left < right) {
+      if (height[left] < height[right]) {
+
+        if (height[left] >= leftMax) {
+          leftMax = height[left];
+        } else {
+          water += leftMax - height[left];
+        }
+        left++;
+      } else {
+        if (height[right] >= rightMax) {
+          rightMax = height[right];
+        } else {
+          water += rightMax - height[righ];
+        }
+        right--;
+      }
+    }
+    return water;
+  }
+
   public static int maxArea(int[] height) {
     int left = 0;
     int right = height.length - 1;

@@ -352,9 +352,11 @@ sum = numbers.filter(num => num % 2 == 0).reduce((a, b) => a + b, 0)
 You declare: "Filter for even numbers, then sum them." You don't explicitly manage the loop or the accumulation—the system handles that.
 
 **Comparison**:
-_Imperative_: Recipe-like. You're the chef giving precise cooking instructions. _Declarative_: Goal-oriented. You're ordering from a menu—you specify what you want, not how the kitchen prepares it.
+_Imperative_: Recipe-like. You're the chef giving precise cooking instructions. 
+_Declarative_: Goal-oriented. You're ordering from a menu—you specify what you want, not how the kitchen prepares it.
 
-_Imperative_: Emphasizes state changes and explicit control (variables being updated, loops executing). _Declarative_: Emphasizes transformations and relationships (data flows through operations).
+_Imperative_: Emphasizes state changes and explicit control (variables being updated, loops executing). 
+_Declarative_: Emphasizes transformations and relationships (data flows through operations).
 
 _Imperative_: More control, potentially more verbose, closer to how hardware works. _Declarative_: More abstract, often more concise, potentially easier to reason about.
 
@@ -386,7 +388,10 @@ You describe the pattern you're looking for, not how to search for it.
 **Programming Languages and Paradigms**:
 Most languages support multiple paradigms, but have different default styles:
 
-_Primarily Imperative_: C, Pascal, early BASIC _Primarily Declarative_: SQL, HTML, CSS, Prolog _Multi-paradigm_: Python, JavaScript, Java (support both styles) _Functional (a declarative style)_: Haskell, Lisp, Erlang
+_Primarily Imperative_: C, Pascal, early BASIC 
+_Primarily Declarative_: SQL, HTML, CSS, Prolog 
+_Multi-paradigm_: Python, JavaScript, Java (support both styles) 
+_Functional (a declarative style)_: Haskell, Lisp, Erlang
 
 **Sub-paradigms**:
 Under the imperative umbrella:

@@ -7,6 +7,74 @@ def main():
     pass
 
 
+def maxProfit(prices):
+    if not prices:
+        return 0
+
+    min_price = prices[0]
+    max_profit = 0
+    for price in prices[1:]:
+        profit = price - min_price
+        max_profit = max(max_profit, profit)
+
+        min_price = min(min_price, price)
+    return max_profit
+
+
+def maxProfitAlternative(prices):
+    min_price = float("inf")
+    max_profit = 0
+    for price in prices:
+        min_price = min(min_price, price)
+        max_profit = max(max_profit, price - min_price)
+    return max_profit
+
+
+def trap(height):
+    if not height:
+        return 0
+
+    left, right = 0, len(height) - 1
+    left_max, right_max = 0, 0
+    water = 0
+    while left < right:
+        if height[left] < height[right]:
+            if height[left] >= left_max:
+                left_max = height[left]
+            else:
+                water += left_max - height[left]
+            left += 1
+        else:
+            if height[right] >= right_max:
+                right_max = height[right]
+            else:
+                water += right_max - height[right]
+            right -= 1
+    return water
+
+
+def trapAlternative(height):
+    if not height:
+        return 0
+
+    n = len(height)
+    left_max = [0] * n
+    right_max = [0] * n
+
+    left_max[0] = height[0]
+    for i in range(1, n):
+        left_max[i] = max(left_max[i - 1], height[i])
+
+    right_max[n - 1] = height[n - 1]
+    for i in range(n - 2, -1, -1):
+        right_max[i] = max(right_max[i + 1], height[i])
+
+    water = 0
+    for i in range(n):
+        water += min(left_max[i], right_max[i]) - height[i]
+    return water
+
+
 def maxAreaAlternative(height: List[int]) -> int:
     left, right = 0, len(height) - 1
     max_water = 0
