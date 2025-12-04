@@ -2033,10 +2033,2042 @@ The goal is to find the right level—abstract enough to be flexible and simple,
 Would you like to explore the other SOLID principles, see how abstraction relates to design patterns, or dive into more advanced abstraction techniques?
 
 
-- Polymorphism
+# Polymorphism
+
+Polymorphism is one of the four fundamental pillars of Object-Oriented Programming. The term comes from Greek: "poly" (many) + "morph" (form) = "many forms." It allows objects of different types to be treated through a common interface while each behaves differently.
+
+Think of it as: **"Same interface, different behaviors"**
+
+---
+
+## **Core Concept**
+
+Polymorphism means the same operation can behave differently on different classes. You can write code that works with a general type, and it automatically works correctly with any specific subtype.
+
+**Real-world analogy**: A universal remote control
+
+- **Interface**: Same buttons (power, volume, channel)
+- **Polymorphic behavior**: Power button works differently for TV (turn on screen), stereo (start amplifier), lights (flip switch)
+- **Same action, different results** depending on the device
+
+---
+
+## **Types of Polymorphism**
+
+### **1. Compile-time Polymorphism (Static)**
+
+- Method overloading
+- Operator overloading
+- Resolved at compile time
+
+### **2. Runtime Polymorphism (Dynamic)**
+
+- Method overriding
+- Resolved at runtime based on actual object type
+- **Most important for OOP**
+
+---
+
+## **Method Overriding (Runtime Polymorphism)**
+
+Subclasses provide their own implementation of methods defined in the parent class.
+
+### **Basic Example**
+
+```python
+class Animal:
+    def __init__(self, name):
+        self.name = name
     
-- Inheritance
+    def make_sound(self):
+        return "Some generic sound"
     
+    def introduce(self):
+        return f"I am {self.name}"
+
+class Dog(Animal):
+    def make_sound(self):
+        """Override parent method"""
+        return "Woof! Woof!"
+
+class Cat(Animal):
+    def make_sound(self):
+        """Override parent method"""
+        return "Meow!"
+
+class Cow(Animal):
+    def make_sound(self):
+        """Override parent method"""
+        return "Moo!"
+
+# Polymorphism in action
+def animal_sound(animal: Animal):
+    """
+    Takes ANY animal - polymorphism!
+    Calls make_sound(), but behavior depends on actual type
+    """
+    print(f"{animal.name} says: {animal.make_sound()}")
+
+# Create different animals
+dog = Dog("Rex")
+cat = Cat("Whiskers")
+cow = Cow("Bessie")
+
+# Same function, different behaviors
+animal_sound(dog)  # Rex says: Woof! Woof!
+animal_sound(cat)  # Whiskers says: Meow!
+animal_sound(cow)  # Bessie says: Moo!
+
+# Can store in a collection and iterate
+animals = [Dog("Buddy"), Cat("Mittens"), Cow("Daisy"), Dog("Max")]
+
+for animal in animals:
+    animal_sound(animal)
+# Each behaves correctly according to its actual type!
+```
+
+**Key insight**: The function `animal_sound()` doesn't need to know the specific type. It works with the `Animal` interface, but each object behaves according to its actual class.
+
+---
+
+## **The Power of Polymorphism**
+
+### **Example 1: Payment Processing**
+
+```python
+from abc import ABC, abstractmethod
+
+class PaymentMethod(ABC):
+    @abstractmethod
+    def process_payment(self, amount: float) -> bool:
+        pass
+    
+    @abstractmethod
+    def get_transaction_fee(self, amount: float) -> float:
+        pass
+
+class CreditCard(PaymentMethod):
+    def __init__(self, card_number, cvv):
+        self.card_number = card_number
+        self.cvv = cvv
+    
+    def process_payment(self, amount: float) -> bool:
+        print(f"Processing ${amount} via Credit Card ending in {self.card_number[-4:]}")
+        # Credit card processing logic
+        return True
+    
+    def get_transaction_fee(self, amount: float) -> float:
+        return amount * 0.029 + 0.30  # 2.9% + $0.30
+
+class PayPal(PaymentMethod):
+    def __init__(self, email):
+        self.email = email
+    
+    def process_payment(self, amount: float) -> bool:
+        print(f"Processing ${amount} via PayPal account {self.email}")
+        # PayPal API logic
+        return True
+    
+    def get_transaction_fee(self, amount: float) -> float:
+        return amount * 0.034 + 0.30  # 3.4% + $0.30
+
+class BankTransfer(PaymentMethod):
+    def __init__(self, account_number, routing_number):
+        self.account_number = account_number
+        self.routing_number = routing_number
+    
+    def process_payment(self, amount: float) -> bool:
+        print(f"Processing ${amount} via Bank Transfer")
+        # ACH/Wire transfer logic
+        return True
+    
+    def get_transaction_fee(self, amount: float) -> float:
+        return 1.00  # Flat $1 fee
+
+class Cryptocurrency(PaymentMethod):
+    def __init__(self, wallet_address):
+        self.wallet_address = wallet_address
+    
+    def process_payment(self, amount: float) -> bool:
+        print(f"Processing ${amount} via Cryptocurrency to {self.wallet_address[:10]}...")
+        # Blockchain transaction
+        return True
+    
+    def get_transaction_fee(self, amount: float) -> float:
+        return amount * 0.01  # 1% network fee
+
+# Checkout system uses polymorphism
+class CheckoutSystem:
+    def process_order(self, payment_method: PaymentMethod, amount: float):
+        """
+        Works with ANY payment method!
+        Polymorphism allows adding new payment types without changing this code
+        """
+        fee = payment_method.get_transaction_fee(amount)
+        total = amount + fee
+        
+        print(f"Order amount: ${amount:.2f}")
+        print(f"Transaction fee: ${fee:.2f}")
+        print(f"Total: ${total:.2f}")
+        
+        if payment_method.process_payment(total):
+            print("✓ Payment successful!\n")
+            return True
+        else:
+            print("✗ Payment failed\n")
+            return False
+
+# Usage - same checkout system, different payment methods
+checkout = CheckoutSystem()
+
+# Customer 1: Credit card
+checkout.process_order(CreditCard("4532-1234-5678-9010", "123"), 100.00)
+
+# Customer 2: PayPal
+checkout.process_order(PayPal("user@example.com"), 100.00)
+
+# Customer 3: Bank transfer
+checkout.process_order(BankTransfer("123456789", "987654321"), 100.00)
+
+# Customer 4: Cryptocurrency
+checkout.process_order(Cryptocurrency("0x742d35Cc6..."), 100.00)
+
+# Adding a new payment method? Just create a new class!
+# No need to modify CheckoutSystem
+```
+
+**Output:**
+
+```
+Order amount: $100.00
+Transaction fee: $3.20
+Total: $103.20
+Processing $103.20 via Credit Card ending in 9010
+✓ Payment successful!
+
+Order amount: $100.00
+Transaction fee: $3.70
+Total: $103.70
+Processing $103.70 via PayPal account user@example.com
+✓ Payment successful!
+
+Order amount: $100.00
+Transaction fee: $1.00
+Total: $101.00
+Processing $101.00 via Bank Transfer
+✓ Payment successful!
+
+Order amount: $100.00
+Transaction fee: $1.00
+Total: $101.00
+Processing $101.00 via Cryptocurrency to 0x742d35Cc6...
+✓ Payment successful!
+```
+
+**Benefits**:
+
+- Add new payment methods without changing checkout code
+- Each payment type handles its own complexity
+- Same interface for all payment types
+- Easy to test (mock payment methods)
+
+---
+
+### **Example 2: Graphics System**
+
+```python
+from abc import ABC, abstractmethod
+from typing import List
+
+class Shape(ABC):
+    """Abstract base class for all shapes"""
+    
+    def __init__(self, color: str):
+        self.color = color
+    
+    @abstractmethod
+    def area(self) -> float:
+        pass
+    
+    @abstractmethod
+    def perimeter(self) -> float:
+        pass
+    
+    @abstractmethod
+    def draw(self) -> str:
+        pass
+
+class Circle(Shape):
+    def __init__(self, color: str, radius: float):
+        super().__init__(color)
+        self.radius = radius
+    
+    def area(self) -> float:
+        return 3.14159 * self.radius ** 2
+    
+    def perimeter(self) -> float:
+        return 2 * 3.14159 * self.radius
+    
+    def draw(self) -> str:
+        return f"Drawing a {self.color} circle with radius {self.radius}"
+
+class Rectangle(Shape):
+    def __init__(self, color: str, width: float, height: float):
+        super().__init__(color)
+        self.width = width
+        self.height = height
+    
+    def area(self) -> float:
+        return self.width * self.height
+    
+    def perimeter(self) -> float:
+        return 2 * (self.width + self.height)
+    
+    def draw(self) -> str:
+        return f"Drawing a {self.color} rectangle {self.width}x{self.height}"
+
+class Triangle(Shape):
+    def __init__(self, color: str, base: float, height: float):
+        super().__init__(color)
+        self.base = base
+        self.height = height
+    
+    def area(self) -> float:
+        return 0.5 * self.base * self.height
+    
+    def perimeter(self) -> float:
+        # Simplified: assuming equilateral
+        return 3 * self.base
+    
+    def draw(self) -> str:
+        return f"Drawing a {self.color} triangle with base {self.base}"
+
+class Canvas:
+    """Graphics canvas that works with any shape"""
+    
+    def __init__(self):
+        self.shapes: List[Shape] = []
+    
+    def add_shape(self, shape: Shape):
+        """Add any shape - polymorphism!"""
+        self.shapes.append(shape)
+    
+    def render(self):
+        """Render all shapes"""
+        print("=== Rendering Canvas ===")
+        for shape in self.shapes:
+            print(shape.draw())
+        print()
+    
+    def calculate_total_area(self) -> float:
+        """Calculate total area of all shapes"""
+        return sum(shape.area() for shape in self.shapes)
+    
+    def get_statistics(self):
+        """Display statistics about all shapes"""
+        print("=== Canvas Statistics ===")
+        print(f"Total shapes: {len(self.shapes)}")
+        print(f"Total area: {self.calculate_total_area():.2f}")
+        
+        for i, shape in enumerate(self.shapes, 1):
+            print(f"\nShape {i}: {type(shape).__name__}")
+            print(f"  Color: {shape.color}")
+            print(f"  Area: {shape.area():.2f}")
+            print(f"  Perimeter: {shape.perimeter():.2f}")
+
+# Usage - polymorphism in action
+canvas = Canvas()
+
+# Add different shapes
+canvas.add_shape(Circle("red", 5))
+canvas.add_shape(Rectangle("blue", 10, 20))
+canvas.add_shape(Triangle("green", 8, 6))
+canvas.add_shape(Circle("yellow", 3))
+canvas.add_shape(Rectangle("purple", 15, 15))
+
+# Render all shapes - each draws differently
+canvas.render()
+
+# Calculate statistics - works for any shape
+canvas.get_statistics()
+
+# Can iterate and treat uniformly
+print("\n=== All Shapes ===")
+for shape in canvas.shapes:
+    print(f"{type(shape).__name__}: area = {shape.area():.2f}")
+```
+
+**Output:**
+
+```
+=== Rendering Canvas ===
+Drawing a red circle with radius 5
+Drawing a blue rectangle 10x20
+Drawing a green triangle with base 8
+Drawing a yellow circle with radius 3
+Drawing a purple rectangle 15x15
+
+=== Canvas Statistics ===
+Total shapes: 5
+Total area: 531.42
+
+Shape 1: Circle
+  Color: red
+  Area: 78.54
+  Perimeter: 31.42
+
+Shape 2: Rectangle
+  Color: blue
+  Area: 200.00
+  Perimeter: 60.00
+
+Shape 3: Triangle
+  Color: green
+  Area: 24.00
+  Perimeter: 24.00
+
+Shape 4: Circle
+  Color: yellow
+  Area: 28.27
+  Perimeter: 18.85
+
+Shape 5: Rectangle
+  Color: purple
+  Area: 225.00
+  Perimeter: 60.00
+
+=== All Shapes ===
+Circle: area = 78.54
+Rectangle: area = 200.00
+Triangle: area = 24.00
+Circle: area = 28.27
+Rectangle: area = 225.00
+```
+
+---
+
+### **Example 3: File Handling System**
+
+```python
+from abc import ABC, abstractmethod
+
+class FileHandler(ABC):
+    """Abstract interface for file handlers"""
+    
+    @abstractmethod
+    def read(self, filepath: str) -> str:
+        pass
+    
+    @abstractmethod
+    def write(self, filepath: str, content: str) -> bool:
+        pass
+    
+    @abstractmethod
+    def get_format(self) -> str:
+        pass
+
+class TextFileHandler(FileHandler):
+    def read(self, filepath: str) -> str:
+        with open(filepath, 'r') as f:
+            return f.read()
+    
+    def write(self, filepath: str, content: str) -> bool:
+        with open(filepath, 'w') as f:
+            f.write(content)
+        return True
+    
+    def get_format(self) -> str:
+        return "Plain Text"
+
+class JSONFileHandler(FileHandler):
+    def read(self, filepath: str) -> str:
+        import json
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        return str(data)
+    
+    def write(self, filepath: str, content: str) -> bool:
+        import json
+        with open(filepath, 'w') as f:
+            json.dump(eval(content), f, indent=2)
+        return True
+    
+    def get_format(self) -> str:
+        return "JSON"
+
+class XMLFileHandler(FileHandler):
+    def read(self, filepath: str) -> str:
+        # XML parsing logic
+        return "<xml>Parsed XML content</xml>"
+    
+    def write(self, filepath: str, content: str) -> bool:
+        # XML writing logic
+        return True
+    
+    def get_format(self) -> str:
+        return "XML"
+
+class CSVFileHandler(FileHandler):
+    def read(self, filepath: str) -> str:
+        import csv
+        with open(filepath, 'r') as f:
+            reader = csv.reader(f)
+            return str(list(reader))
+    
+    def write(self, filepath: str, content: str) -> bool:
+        import csv
+        with open(filepath, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerows(eval(content))
+        return True
+    
+    def get_format(self) -> str:
+        return "CSV"
+
+class FileProcessor:
+    """Processes files using polymorphism"""
+    
+    def __init__(self, handler: FileHandler):
+        self.handler = handler
+    
+    def process_file(self, input_path: str, output_path: str):
+        """
+        Read and write files - works with ANY handler!
+        Behavior changes based on actual handler type
+        """
+        print(f"Processing file using {self.handler.get_format()} handler")
+        
+        # Read using handler's specific method
+        content = self.handler.read(input_path)
+        print(f"Read content: {content[:50]}...")
+        
+        # Transform content (example)
+        transformed = content.upper()
+        
+        # Write using handler's specific method
+        success = self.handler.write(output_path, transformed)
+        
+        if success:
+            print(f"✓ File processed and saved to {output_path}\n")
+        else:
+            print(f"✗ Failed to process file\n")
+    
+    def switch_handler(self, new_handler: FileHandler):
+        """Dynamically change handler - polymorphism!"""
+        self.handler = new_handler
+
+# Usage
+# Same processor, different handlers
+processor = FileProcessor(TextFileHandler())
+processor.process_file("data.txt", "output.txt")
+
+# Switch to JSON handler
+processor.switch_handler(JSONFileHandler())
+processor.process_file("data.json", "output.json")
+
+# Switch to CSV handler
+processor.switch_handler(CSVFileHandler())
+processor.process_file("data.csv", "output.csv")
+
+# Factory pattern with polymorphism
+class FileHandlerFactory:
+    @staticmethod
+    def get_handler(file_extension: str) -> FileHandler:
+        """Return appropriate handler based on file type"""
+        handlers = {
+            '.txt': TextFileHandler(),
+            '.json': JSONFileHandler(),
+            '.xml': XMLFileHandler(),
+            '.csv': CSVFileHandler()
+        }
+        return handlers.get(file_extension, TextFileHandler())
+
+# Automatic handler selection
+def process_any_file(filepath: str):
+    """Process any file type automatically"""
+    import os
+    _, ext = os.path.splitext(filepath)
+    handler = FileHandlerFactory.get_handler(ext)
+    processor = FileProcessor(handler)
+    processor.process_file(filepath, f"output{ext}")
+
+process_any_file("document.txt")
+process_any_file("config.json")
+process_any_file("data.csv")
+```
+
+---
+
+## **Duck Typing (Python's Polymorphism)**
+
+Python uses "duck typing": "If it walks like a duck and quacks like a duck, it's a duck." Objects don't need to inherit from a common base class—they just need to implement the expected interface.
+
+```python
+# No common base class needed in Python!
+
+class Dog:
+    def speak(self):
+        return "Woof!"
+
+class Cat:
+    def speak(self):
+        return "Meow!"
+
+class Robot:
+    def speak(self):
+        return "Beep boop!"
+
+class Person:
+    def speak(self):
+        return "Hello!"
+
+# Function works with anything that has a speak() method
+def make_it_speak(thing):
+    """
+    Polymorphism without inheritance!
+    Works with any object that has speak() method
+    """
+    print(thing.speak())
+
+# All work, even though they don't share a base class
+make_it_speak(Dog())      # Woof!
+make_it_speak(Cat())      # Meow!
+make_it_speak(Robot())    # Beep boop!
+make_it_speak(Person())   # Hello!
+
+# This is duck typing polymorphism
+# "If it has a speak() method, I can call it"
+```
+
+---
+
+## **Method Overloading (Compile-time Polymorphism)**
+
+Same method name, different parameters. Python doesn't support traditional method overloading, but we can simulate it:
+
+```python
+class Calculator:
+    def add(self, *args):
+        """
+        Polymorphic add - works with any number of arguments
+        Simulates method overloading
+        """
+        if len(args) == 2:
+            return args[0] + args[1]
+        elif len(args) == 3:
+            return args[0] + args[1] + args[2]
+        else:
+            return sum(args)
+    
+    def process(self, data):
+        """
+        Polymorphic behavior based on type
+        """
+        if isinstance(data, int):
+            return data * 2
+        elif isinstance(data, str):
+            return data.upper()
+        elif isinstance(data, list):
+            return [x * 2 for x in data]
+        else:
+            return None
+
+calc = Calculator()
+print(calc.add(5, 3))              # 8 (two arguments)
+print(calc.add(1, 2, 3))           # 6 (three arguments)
+print(calc.add(1, 2, 3, 4, 5))     # 15 (multiple arguments)
+
+print(calc.process(10))            # 20 (integer)
+print(calc.process("hello"))       # HELLO (string)
+print(calc.process([1, 2, 3]))     # [2, 4, 6] (list)
+```
+
+---
+
+## **Operator Overloading**
+
+Define how operators work with custom objects:
+
+```python
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __add__(self, other):
+        """Overload + operator"""
+        return Vector(self.x + other.x, self.y + other.y)
+    
+    def __sub__(self, other):
+        """Overload - operator"""
+        return Vector(self.x - other.x, self.y - other.y)
+    
+    def __mul__(self, scalar):
+        """Overload * operator"""
+        return Vector(self.x * scalar, self.y * scalar)
+    
+    def __str__(self):
+        """Overload str() function"""
+        return f"Vector({self.x}, {self.y})"
+    
+    def __eq__(self, other):
+        """Overload == operator"""
+        return self.x == other.x and self.y == other.y
+
+v1 = Vector(2, 3)
+v2 = Vector(4, 5)
+
+# Polymorphic operators
+v3 = v1 + v2        # Uses __add__
+print(v3)           # Vector(6, 8)
+
+v4 = v2 - v1        # Uses __sub__
+print(v4)           # Vector(2, 2)
+
+v5 = v1 * 3         # Uses __mul__
+print(v5)           # Vector(6, 9)
+
+print(v1 == v2)     # Uses __eq__: False
+```
+
+---
+
+## **Polymorphism with Collections**
+
+```python
+from abc import ABC, abstractmethod
+
+class Employee(ABC):
+    def __init__(self, name, employee_id):
+        self.name = name
+        self.employee_id = employee_id
+    
+    @abstractmethod
+    def calculate_salary(self) -> float:
+        pass
+    
+    @abstractmethod
+    def get_role(self) -> str:
+        pass
+
+class FullTimeEmployee(Employee):
+    def __init__(self, name, employee_id, annual_salary):
+        super().__init__(name, employee_id)
+        self.annual_salary = annual_salary
+    
+    def calculate_salary(self) -> float:
+        return self.annual_salary / 12
+    
+    def get_role(self) -> str:
+        return "Full-Time Employee"
+
+class PartTimeEmployee(Employee):
+    def __init__(self, name, employee_id, hourly_rate, hours_worked):
+        super().__init__(name, employee_id)
+        self.hourly_rate = hourly_rate
+        self.hours_worked = hours_worked
+    
+    def calculate_salary(self) -> float:
+        return self.hourly_rate * self.hours_worked
+    
+    def get_role(self) -> str:
+        return "Part-Time Employee"
+
+class Contractor(Employee):
+    def __init__(self, name, employee_id, contract_amount):
+        super().__init__(name, employee_id)
+        self.contract_amount = contract_amount
+    
+    def calculate_salary(self) -> float:
+        return self.contract_amount
+    
+    def get_role(self) -> str:
+        return "Contractor"
+
+class Intern(Employee):
+    def __init__(self, name, employee_id, stipend):
+        super().__init__(name, employee_id)
+        self.stipend = stipend
+    
+    def calculate_salary(self) -> float:
+        return self.stipend
+    
+    def get_role(self) -> str:
+        return "Intern"
+
+class PayrollSystem:
+    """Process payroll for all employee types polymorphically"""
+    
+    def __init__(self):
+        self.employees = []
+    
+    def add_employee(self, employee: Employee):
+        self.employees.append(employee)
+    
+    def process_payroll(self):
+        """
+        Process payroll for ALL employee types
+        Each calculates salary differently - polymorphism!
+        """
+        print("=== Monthly Payroll ===\n")
+        total_payroll = 0
+        
+        for employee in self.employees:
+            salary = employee.calculate_salary()
+            total_payroll += salary
+            
+            print(f"{employee.name} ({employee.get_role()})")
+            print(f"  Employee ID: {employee.employee_id}")
+            print(f"  Monthly Payment: ${salary:,.2f}\n")
+        
+        print(f"Total Monthly Payroll: ${total_payroll:,.2f}")
+
+# Usage
+payroll = PayrollSystem()
+
+# Add different types of employees
+payroll.add_employee(FullTimeEmployee("Alice Johnson", "FT001", 90000))
+payroll.add_employee(FullTimeEmployee("Bob Smith", "FT002", 75000))
+payroll.add_employee(PartTimeEmployee("Charlie Brown", "PT001", 25, 80))
+payroll.add_employee(PartTimeEmployee("Diana Prince", "PT002", 30, 60))
+payroll.add_employee(Contractor("Eve Wilson", "CT001", 8000))
+payroll.add_employee(Intern("Frank Miller", "IN001", 1500))
+
+# Process payroll - polymorphism handles all types
+payroll.process_payroll()
+```
+
+**Output:**
+
+```
+=== Monthly Payroll ===
+
+Alice Johnson (Full-Time Employee)
+  Employee ID: FT001
+  Monthly Payment: $7,500.00
+
+Bob Smith (Full-Time Employee)
+  Employee ID: FT002
+  Monthly Payment: $6,250.00
+
+Charlie Brown (Part-Time Employee)
+  Employee ID: PT001
+  Monthly Payment: $2,000.00
+
+Diana Prince (Part-Time Employee)
+  Employee ID: PT002
+  Monthly Payment: $1,800.00
+
+Eve Wilson (Contractor)
+  Employee ID: CT001
+  Monthly Payment: $8,000.00
+
+Frank Miller (Intern)
+  Employee ID: IN001
+  Monthly Payment: $1,500.00
+
+Total Monthly Payroll: $27,050.00
+```
+
+---
+
+## **Benefits of Polymorphism**
+
+1. **Code Reusability**: Write general code that works with many types
+2. **Flexibility**: Easy to add new types without changing existing code
+3. **Maintainability**: Changes localized to specific classes
+4. **Extensibility**: System grows naturally by adding new implementations
+5. **Testability**: Can mock/stub implementations for testing
+6. **Clean Code**: Eliminates complex if/else chains based on type
+
+---
+
+## **Polymorphism vs Type Checking (Anti-pattern)**
+
+### **BAD: Type checking (avoid this)**
+
+```python
+def process_payment_bad(payment_type, amount):
+    """
+    Anti-pattern: checking types manually
+    Hard to extend, violates Open/Closed Principle
+    """
+    if payment_type == "credit_card":
+        print("Processing credit card payment")
+        fee = amount * 0.029
+    elif payment_type == "paypal":
+        print("Processing PayPal payment")
+        fee = amount * 0.034
+    elif payment_type == "bank_transfer":
+        print("Processing bank transfer")
+        fee = 1.00
+    elif payment_type == "crypto":
+        print("Processing cryptocurrency")
+        fee = amount * 0.01
+    else:
+        print("Unknown payment type")
+        fee = 0
+    
+    return amount + fee
+
+# Adding new payment type requires modifying this function!
+```
+
+### **GOOD: Polymorphism**
+
+```python
+def process_payment_good(payment_method: PaymentMethod, amount: float):
+    """
+    Polymorphic approach: works with any PaymentMethod
+    Easy to extend - just add new classes
+    """
+    fee = payment_method.get_transaction_fee(amount)
+    return payment_method.process_payment(amount + fee)
+
+# Adding new payment type: just create new class, no modification needed!
+```
+
+---
+
+## **Key Takeaways**
+
+**Polymorphism is**:
+
+1. **"One interface, many implementations"**
+2. **Writing code that works with abstractions**, not concrete types
+3. **Letting objects decide their own behavior** based on their type
+4. **The foundation of extensible systems**
+
+**Three key aspects**:
+
+1. **Inheritance**: Subclasses inherit from parent
+2. **Method Overriding**: Subclasses provide specific implementations
+3. **Dynamic Binding**: Correct method chosen at runtime
+
+**Remember**: Polymorphism allows you to write code once that works with types that don't even exist yet. When you need a new payment method, shape, or employee type, you just add it—the existing code continues to work.
+
+**The mantra**: "Program to an interface, not an implementation."
+
+# Inheritance
+
+Inheritance is one of the four fundamental pillars of Object-Oriented Programming. It allows a class to inherit properties and behaviors from another class, creating a hierarchical relationship between classes. Think of it as a "parent-child" or "is-a" relationship.
+
+**Core concept**: "A Dog **is a** Animal" or "A Car **is a** Vehicle"
+
+---
+
+## **Core Concept**
+
+Inheritance enables:
+
+1. **Code Reuse**: Child classes inherit parent functionality
+2. **Hierarchical Classification**: Model real-world relationships
+3. **Extension**: Child classes can add new features
+4. **Specialization**: Child classes can override/customize behavior
+5. **Polymorphism**: Treat children as parents (covered in previous section)
+
+**Real-world analogy**: Biological classification
+
+- **Superclass (Parent)**: Animal
+    - Has: body, can eat, can move
+- **Subclass (Child)**: Dog
+    - Inherits: body, can eat, can move
+    - Adds: can bark, has breed
+    - Specializes: moves by walking/running
+
+---
+
+## **Basic Inheritance Syntax**
+
+### **Python Example**
+
+```python
+# Parent class (Base class, Superclass)
+class Animal:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.is_alive = True
+    
+    def eat(self):
+        return f"{self.name} is eating"
+    
+    def sleep(self):
+        return f"{self.name} is sleeping"
+    
+    def make_sound(self):
+        return "Some generic sound"
+
+# Child class (Derived class, Subclass)
+class Dog(Animal):  # Inherits from Animal
+    def __init__(self, name, age, breed):
+        super().__init__(name, age)  # Call parent constructor
+        self.breed = breed  # Add new attribute
+    
+    def make_sound(self):  # Override parent method
+        return "Woof! Woof!"
+    
+    def fetch(self):  # Add new method
+        return f"{self.name} is fetching the ball"
+
+# Usage
+dog = Dog("Rex", 5, "Golden Retriever")
+
+# Inherited methods
+print(dog.eat())      # Rex is eating (from Animal)
+print(dog.sleep())    # Rex is sleeping (from Animal)
+
+# Overridden method
+print(dog.make_sound())  # Woof! Woof! (from Dog, not Animal)
+
+# New method
+print(dog.fetch())    # Rex is fetching the ball (unique to Dog)
+
+# Inherited attributes
+print(dog.name)       # Rex (from Animal)
+print(dog.age)        # 5 (from Animal)
+print(dog.is_alive)   # True (from Animal)
+
+# New attributes
+print(dog.breed)      # Golden Retriever (unique to Dog)
+```
+
+---
+
+## **The Inheritance Hierarchy**
+
+### **Single Inheritance**
+
+One child inherits from one parent.
+
+```python
+class Vehicle:
+    def __init__(self, make, model, year):
+        self.make = make
+        self.model = model
+        self.year = year
+    
+    def start(self):
+        return f"{self.make} {self.model} is starting"
+    
+    def stop(self):
+        return f"{self.make} {self.model} is stopping"
+
+class Car(Vehicle):  # Car inherits from Vehicle
+    def __init__(self, make, model, year, num_doors):
+        super().__init__(make, model, year)
+        self.num_doors = num_doors
+    
+    def honk(self):
+        return "Beep beep!"
+
+class Motorcycle(Vehicle):  # Motorcycle also inherits from Vehicle
+    def __init__(self, make, model, year, engine_cc):
+        super().__init__(make, model, year)
+        self.engine_cc = engine_cc
+    
+    def wheelie(self):
+        return "Performing a wheelie!"
+
+# Hierarchy:
+#     Vehicle
+#     /     \
+#   Car   Motorcycle
+
+car = Car("Toyota", "Camry", 2023, 4)
+bike = Motorcycle("Harley", "Sportster", 2023, 1200)
+
+print(car.start())    # Inherited from Vehicle
+print(car.honk())     # Unique to Car
+
+print(bike.start())   # Inherited from Vehicle
+print(bike.wheelie()) # Unique to Motorcycle
+```
+
+---
+
+### **Multi-level Inheritance**
+
+A child inherits from a parent, which inherits from another parent (grandparent).
+
+```python
+class LivingThing:
+    def __init__(self, name):
+        self.name = name
+    
+    def breathe(self):
+        return f"{self.name} is breathing"
+
+class Animal(LivingThing):  # Animal inherits from LivingThing
+    def __init__(self, name, species):
+        super().__init__(name)
+        self.species = species
+    
+    def move(self):
+        return f"{self.name} is moving"
+
+class Dog(Animal):  # Dog inherits from Animal (which inherits from LivingThing)
+    def __init__(self, name, breed):
+        super().__init__(name, "Canine")
+        self.breed = breed
+    
+    def bark(self):
+        return f"{self.name} says Woof!"
+
+# Hierarchy (3 levels):
+#   LivingThing
+#       ↓
+#     Animal
+#       ↓
+#      Dog
+
+dog = Dog("Buddy", "Labrador")
+
+# Methods from all levels of hierarchy
+print(dog.breathe())  # From LivingThing (grandparent)
+print(dog.move())     # From Animal (parent)
+print(dog.bark())     # From Dog (itself)
+
+print(dog.name)       # From LivingThing
+print(dog.species)    # From Animal
+print(dog.breed)      # From Dog
+```
+
+---
+
+### **Multiple Inheritance**
+
+A child inherits from multiple parents. (Python supports this; Java/C# don't directly)
+
+```python
+class Flyer:
+    def fly(self):
+        return "Flying through the air"
+    
+    def land(self):
+        return "Landing safely"
+
+class Swimmer:
+    def swim(self):
+        return "Swimming in water"
+    
+    def dive(self):
+        return "Diving underwater"
+
+class Duck(Flyer, Swimmer):  # Inherits from BOTH Flyer and Swimmer
+    def __init__(self, name):
+        self.name = name
+    
+    def quack(self):
+        return f"{self.name} says Quack!"
+
+# Hierarchy:
+#   Flyer    Swimmer
+#      \      /
+#       Duck
+
+duck = Duck("Donald")
+
+# Methods from both parents
+print(duck.fly())    # From Flyer
+print(duck.swim())   # From Swimmer
+print(duck.quack())  # From Duck itself
+```
+
+**Warning**: Multiple inheritance can be complex and lead to the "Diamond Problem" (see later).
+
+---
+
+### **Hierarchical Inheritance**
+
+Multiple children inherit from one parent.
+
+```python
+class Employee:
+    def __init__(self, name, employee_id, salary):
+        self.name = name
+        self.employee_id = employee_id
+        self.salary = salary
+    
+    def work(self):
+        return f"{self.name} is working"
+    
+    def get_salary(self):
+        return self.salary
+
+class Manager(Employee):
+    def __init__(self, name, employee_id, salary, department):
+        super().__init__(name, employee_id, salary)
+        self.department = department
+    
+    def manage_team(self):
+        return f"{self.name} is managing the {self.department} department"
+
+class Developer(Employee):
+    def __init__(self, name, employee_id, salary, programming_language):
+        super().__init__(name, employee_id, salary)
+        self.programming_language = programming_language
+    
+    def write_code(self):
+        return f"{self.name} is writing {self.programming_language} code"
+
+class Designer(Employee):
+    def __init__(self, name, employee_id, salary, design_tool):
+        super().__init__(name, employee_id, salary)
+        self.design_tool = design_tool
+    
+    def create_design(self):
+        return f"{self.name} is designing with {self.design_tool}"
+
+# Hierarchy:
+#           Employee
+#          /    |    \
+#    Manager Developer Designer
+
+manager = Manager("Alice", "M001", 90000, "Engineering")
+developer = Developer("Bob", "D001", 75000, "Python")
+designer = Designer("Carol", "DS001", 70000, "Figma")
+
+# All inherit from Employee
+print(manager.work())        # Inherited
+print(developer.work())      # Inherited
+print(designer.work())       # Inherited
+
+# Each has unique methods
+print(manager.manage_team())
+print(developer.write_code())
+print(designer.create_design())
+```
+
+---
+
+## **Method Resolution Order (MRO)**
+
+When multiple inheritance is used, Python follows a specific order to find methods. This is the **Method Resolution Order**.
+
+```python
+class A:
+    def method(self):
+        return "Method from A"
+
+class B(A):
+    def method(self):
+        return "Method from B"
+
+class C(A):
+    def method(self):
+        return "Method from C"
+
+class D(B, C):  # Multiple inheritance
+    pass
+
+# Hierarchy:
+#     A
+#    / \
+#   B   C
+#    \ /
+#     D
+
+obj = D()
+print(obj.method())  # Which method is called?
+
+# Check MRO
+print(D.__mro__)
+# Output: (<class 'D'>, <class 'B'>, <class 'C'>, <class 'A'>, <class 'object'>)
+
+# Searches in order: D → B → C → A → object
+# Finds method in B first, so prints "Method from B"
+```
+
+Python uses **C3 Linearization** algorithm to determine MRO, ensuring:
+
+- Children are checked before parents
+- Parent order is preserved
+- No class is checked before its parents
+
+---
+
+## **The `super()` Function**
+
+`super()` allows you to call methods from the parent class.
+
+### **Basic Usage**
+
+```python
+class Parent:
+    def __init__(self, name):
+        self.name = name
+        print(f"Parent constructor: {name}")
+    
+    def greet(self):
+        return f"Hello from {self.name}"
+
+class Child(Parent):
+    def __init__(self, name, age):
+        super().__init__(name)  # Call parent constructor
+        self.age = age
+        print(f"Child constructor: {age}")
+    
+    def greet(self):
+        parent_greeting = super().greet()  # Call parent method
+        return f"{parent_greeting}, and I'm {self.age} years old"
+
+child = Child("Alice", 10)
+print(child.greet())
+
+# Output:
+# Parent constructor: Alice
+# Child constructor: 10
+# Hello from Alice, and I'm 10 years old
+```
+
+### **Cooperative Multiple Inheritance**
+
+`super()` is crucial for multiple inheritance:
+
+```python
+class A:
+    def __init__(self):
+        print("A.__init__")
+        super().__init__()
+
+class B:
+    def __init__(self):
+        print("B.__init__")
+        super().__init__()
+
+class C(A, B):
+    def __init__(self):
+        print("C.__init__")
+        super().__init__()
+
+c = C()
+
+# Output:
+# C.__init__
+# A.__init__
+# B.__init__
+
+# super() follows MRO: C → A → B → object
+```
+
+---
+
+## **Real-World Example: Banking System**
+
+```python
+from datetime import datetime
+
+class Account:
+    """Base class for all account types"""
+    
+    def __init__(self, account_number, owner, balance=0):
+        self.account_number = account_number
+        self.owner = owner
+        self.balance = balance
+        self.transactions = []
+        self.created_at = datetime.now()
+    
+    def deposit(self, amount):
+        if amount > 0:
+            self.balance += amount
+            self._record_transaction("Deposit", amount)
+            return True
+        return False
+    
+    def withdraw(self, amount):
+        if amount > 0 and amount <= self.balance:
+            self.balance -= amount
+            self._record_transaction("Withdrawal", amount)
+            return True
+        return False
+    
+    def get_balance(self):
+        return self.balance
+    
+    def _record_transaction(self, transaction_type, amount):
+        self.transactions.append({
+            'type': transaction_type,
+            'amount': amount,
+            'timestamp': datetime.now(),
+            'balance': self.balance
+        })
+    
+    def get_statement(self):
+        statement = f"\n=== Account Statement ===\n"
+        statement += f"Account: {self.account_number}\n"
+        statement += f"Owner: {self.owner}\n"
+        statement += f"Current Balance: ${self.balance:.2f}\n"
+        statement += f"\nRecent Transactions:\n"
+        for trans in self.transactions[-5:]:
+            statement += f"  {trans['type']}: ${trans['amount']:.2f} "
+            statement += f"(Balance: ${trans['balance']:.2f})\n"
+        return statement
+
+class SavingsAccount(Account):
+    """Savings account with interest"""
+    
+    def __init__(self, account_number, owner, balance=0, interest_rate=0.02):
+        super().__init__(account_number, owner, balance)
+        self.interest_rate = interest_rate
+        self.account_type = "Savings"
+    
+    def apply_interest(self):
+        """Apply monthly interest"""
+        interest = self.balance * self.interest_rate
+        self.balance += interest
+        self._record_transaction("Interest", interest)
+        return interest
+    
+    def withdraw(self, amount):
+        """Override: Savings has withdrawal limit"""
+        max_withdrawal = 5000
+        if amount > max_withdrawal:
+            print(f"Withdrawal limit is ${max_withdrawal}")
+            return False
+        return super().withdraw(amount)
+
+class CheckingAccount(Account):
+    """Checking account with overdraft protection"""
+    
+    def __init__(self, account_number, owner, balance=0, overdraft_limit=500):
+        super().__init__(account_number, owner, balance)
+        self.overdraft_limit = overdraft_limit
+        self.account_type = "Checking"
+    
+    def withdraw(self, amount):
+        """Override: Allow overdraft up to limit"""
+        if amount > 0 and (self.balance - amount) >= -self.overdraft_limit:
+            self.balance -= amount
+            self._record_transaction("Withdrawal", amount)
+            if self.balance < 0:
+                print(f"Warning: Account overdrawn by ${abs(self.balance):.2f}")
+            return True
+        print("Insufficient funds (including overdraft)")
+        return False
+    
+    def get_available_balance(self):
+        """Total available including overdraft"""
+        return self.balance + self.overdraft_limit
+
+class StudentAccount(SavingsAccount):
+    """Student account - special savings account with no fees"""
+    
+    def __init__(self, account_number, owner, balance=0, university=""):
+        super().__init__(account_number, owner, balance, interest_rate=0.01)
+        self.university = university
+        self.account_type = "Student"
+        self.monthly_fee = 0  # No fees for students
+    
+    def verify_student_status(self):
+        """Verify student is still enrolled"""
+        return f"Student at {self.university}"
+    
+    def withdraw(self, amount):
+        """Override: Student accounts have lower withdrawal limit"""
+        max_withdrawal = 1000
+        if amount > max_withdrawal:
+            print(f"Student withdrawal limit is ${max_withdrawal}")
+            return False
+        return Account.withdraw(self, amount)  # Skip SavingsAccount limit
+
+class PremiumAccount(CheckingAccount):
+    """Premium account with extra benefits"""
+    
+    def __init__(self, account_number, owner, balance=0):
+        super().__init__(account_number, owner, balance, overdraft_limit=2000)
+        self.account_type = "Premium"
+        self.reward_points = 0
+    
+    def withdraw(self, amount):
+        """Override: Earn reward points on withdrawals"""
+        success = super().withdraw(amount)
+        if success:
+            # Earn 1 point per $10 withdrawn
+            points = int(amount / 10)
+            self.reward_points += points
+            print(f"Earned {points} reward points!")
+        return success
+    
+    def deposit(self, amount):
+        """Override: Earn reward points on deposits"""
+        success = super().deposit(amount)
+        if success:
+            points = int(amount / 10)
+            self.reward_points += points
+            print(f"Earned {points} reward points!")
+        return success
+    
+    def redeem_points(self, points):
+        """Redeem points for cash"""
+        if points <= self.reward_points:
+            cash_value = points * 0.01  # 1 point = $0.01
+            self.reward_points -= points
+            self.deposit(cash_value)
+            return cash_value
+        return 0
+
+# Usage - Demonstrating inheritance hierarchy
+
+print("=== Creating Accounts ===\n")
+
+# Basic savings account
+savings = SavingsAccount("SAV001", "Alice Johnson", 5000)
+print(f"Created {savings.account_type} account for {savings.owner}")
+
+# Checking account
+checking = CheckingAccount("CHK001", "Bob Smith", 2000)
+print(f"Created {checking.account_type} account for {checking.owner}")
+
+# Student account
+student = StudentAccount("STU001", "Charlie Brown", 500, "MIT")
+print(f"Created {student.account_type} account for {student.owner}")
+
+# Premium account
+premium = PremiumAccount("PRM001", "Diana Prince", 10000)
+print(f"Created {premium.account_type} account for {premium.owner}")
+
+print("\n=== Testing Inherited Methods ===\n")
+
+# All accounts can deposit and withdraw (inherited from Account)
+savings.deposit(1000)
+checking.deposit(500)
+student.deposit(200)
+premium.deposit(3000)
+
+print("\n=== Testing Specialized Behavior ===\n")
+
+# Savings: Apply interest
+interest = savings.apply_interest()
+print(f"Applied ${interest:.2f} interest to savings account")
+
+# Checking: Use overdraft
+print(f"\nChecking balance: ${checking.get_balance():.2f}")
+checking.withdraw(2400)  # More than balance, uses overdraft
+print(f"After overdraft: ${checking.get_balance():.2f}")
+
+# Student: Lower withdrawal limit
+print(f"\nStudent attempting to withdraw $5000...")
+student.withdraw(5000)  # Will fail - student limit is $1000
+print(f"Student attempting to withdraw $500...")
+student.withdraw(500)   # Will succeed
+
+# Premium: Reward points
+print(f"\nPremium account transactions with rewards:")
+premium.withdraw(1000)
+print(f"Total reward points: {premium.reward_points}")
+
+print("\n=== Account Statements ===")
+print(savings.get_statement())
+print(checking.get_statement())
+print(student.get_statement())
+print(premium.get_statement())
+
+# Polymorphism: Treat all as Account
+print("\n=== Processing All Accounts ===\n")
+accounts = [savings, checking, student, premium]
+
+for account in accounts:
+    print(f"{account.account_type} - {account.owner}: ${account.get_balance():.2f}")
+```
+
+**Output (partial):**
+
+```
+=== Creating Accounts ===
+
+Created Savings account for Alice Johnson
+Created Checking account for Bob Smith
+Created Student account for Charlie Brown
+Created Premium account for Diana Prince
+
+=== Testing Inherited Methods ===
+
+=== Testing Specialized Behavior ===
+
+Applied $120.00 interest to savings account
+
+Checking balance: $2500.00
+Warning: Account overdrawn by $100.00
+After overdraft: $-100.00
+
+Student attempting to withdraw $5000...
+Student withdrawal limit is $1000
+Student attempting to withdraw $500...
+
+Premium account transactions with rewards:
+Earned 100 reward points!
+Total reward points: 400
+
+=== Account Statements ===
+
+=== Account Statement ===
+Account: SAV001
+Owner: Alice Johnson
+Current Balance: $6120.00
+
+Recent Transactions:
+  Deposit: $1000.00 (Balance: $6000.00)
+  Interest: $120.00 (Balance: $6120.00)
+
+...
+```
+
+**Inheritance hierarchy:**
+
+```
+        Account (base)
+        /      |      \
+    Savings Checking  ...
+       |              |
+    Student        Premium
+```
+
+---
+
+## **Protected and Private Members**
+
+### **Access Levels**
+
+```python
+class Parent:
+    def __init__(self):
+        self.public = "Everyone can access"
+        self._protected = "Convention: internal use, but accessible"
+        self.__private = "Name mangled, hard to access outside class"
+    
+    def public_method(self):
+        return "Public method"
+    
+    def _protected_method(self):
+        return "Protected method (by convention)"
+    
+    def __private_method(self):
+        return "Private method"
+    
+    def access_private(self):
+        # Can access private members within class
+        return self.__private_method()
+
+class Child(Parent):
+    def __init__(self):
+        super().__init__()
+    
+    def test_access(self):
+        print(self.public)          # OK
+        print(self._protected)       # OK (convention says OK for subclasses)
+        # print(self.__private)      # Error! Name mangled
+        print(self._Parent__private) # OK (but ugly - name mangling bypass)
+
+parent = Parent()
+print(parent.public)           # OK
+print(parent._protected)       # OK (but convention says "don't")
+# print(parent.__private)      # Error! Name mangled
+
+child = Child()
+child.test_access()
+```
+
+---
+
+## **Method Overriding**
+
+Child classes can replace parent methods:
+
+```python
+class Shape:
+    def __init__(self, color):
+        self.color = color
+    
+    def area(self):
+        """Default implementation"""
+        return 0
+    
+    def describe(self):
+        return f"A {self.color} shape"
+
+class Rectangle(Shape):
+    def __init__(self, color, width, height):
+        super().__init__(color)
+        self.width = width
+        self.height = height
+    
+    def area(self):
+        """Override: specific calculation for rectangle"""
+        return self.width * self.height
+    
+    def describe(self):
+        """Override and extend"""
+        parent_desc = super().describe()
+        return f"{parent_desc} - specifically a rectangle"
+
+class Circle(Shape):
+    def __init__(self, color, radius):
+        super().__init__(color)
+        self.radius = radius
+    
+    def area(self):
+        """Override: specific calculation for circle"""
+        return 3.14159 * self.radius ** 2
+
+rect = Rectangle("blue", 10, 5)
+circle = Circle("red", 7)
+
+print(rect.describe())   # Uses overridden method
+print(f"Area: {rect.area()}")
+
+print(circle.describe()) # Uses parent method (not overridden)
+print(f"Area: {circle.area()}")
+```
+
+---
+
+## **Abstract Base Classes (Enforcing Inheritance Contract)**
+
+```python
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    """Abstract base class - cannot be instantiated"""
+    
+    def __init__(self, make, model):
+        self.make = make
+        self.model = model
+    
+    @abstractmethod
+    def start_engine(self):
+        """Every vehicle MUST implement this"""
+        pass
+    
+    @abstractmethod
+    def stop_engine(self):
+        """Every vehicle MUST implement this"""
+        pass
+    
+    def honk(self):
+        """Concrete method - can be inherited as-is"""
+        return "Beep!"
+
+# Cannot do this:
+# vehicle = Vehicle("Generic", "Vehicle")  # Error!
+
+class Car(Vehicle):
+    def start_engine(self):
+        """Must implement abstract method"""
+        return f"{self.make} {self.model}: Engine started with key"
+    
+    def stop_engine(self):
+        """Must implement abstract method"""
+        return f"{self.make} {self.model}: Engine stopped"
+
+class ElectricCar(Vehicle):
+    def start_engine(self):
+        """Must implement abstract method"""
+        return f"{self.make} {self.model}: Electric motor activated"
+    
+    def stop_engine(self):
+        """Must implement abstract method"""
+        return f"{self.make} {self.model}: Electric motor deactivated"
+
+car = Car("Toyota", "Camry")
+ev = ElectricCar("Tesla", "Model 3")
+
+print(car.start_engine())
+print(ev.start_engine())
+print(car.honk())  # Inherited concrete method
+```
+
+---
+
+## **Benefits of Inheritance**
+
+1. **Code Reuse**: Don't repeat common functionality
+2. **Extensibility**: Easy to add new types
+3. **Maintainability**: Changes to parent affect all children
+4. **Polymorphism**: Treat children as parents
+5. **Natural Modeling**: Represents real-world hierarchies
+
+---
+
+## **When to Use Inheritance**
+
+### **Good Use Cases**
+
+**1. True "is-a" relationships:**
+
+```python
+# Dog IS-A Animal ✓
+class Animal:
+    pass
+
+class Dog(Animal):
+    pass
+```
+
+**2. Specialization:**
+
+```python
+# CheckingAccount is a specialized Account ✓
+class Account:
+    pass
+
+class CheckingAccount(Account):
+    pass
+```
+
+**3. Shared behavior:**
+
+```python
+# All shapes can calculate area ✓
+class Shape:
+    def area(self):
+        pass
+
+class Circle(Shape):
+    pass
+```
+
+---
+
+## **When NOT to Use Inheritance**
+
+### **1. "Has-a" relationships (Use Composition)**
+
+```python
+# BAD: Car IS-A Engine? No, Car HAS-A Engine!
+class Engine:
+    def start(self):
+        return "Engine started"
+
+class Car(Engine):  # WRONG!
+    pass
+
+# GOOD: Composition
+class Car:
+    def __init__(self):
+        self.engine = Engine()  # Car HAS-A Engine
+    
+    def start(self):
+        return self.engine.start()
+```
+
+### **2. Utility functions (Use functions or modules)**
+
+```python
+# BAD: Inheriting for utility methods
+class MathUtils:
+    def add(self, a, b):
+        return a + b
+
+class Calculator(MathUtils):  # Unnecessary inheritance
+    pass
+
+# GOOD: Just use functions or composition
+def add(a, b):
+    return a + b
+```
+
+### **3. Deep hierarchies (Keep it shallow)**
+
+```python
+# BAD: Too deep
+class LivingThing:
+    pass
+
+class Animal(LivingThing):
+    pass
+
+class Mammal(Animal):
+    pass
+
+class Primate(Mammal):
+    pass
+
+class Human(Primate):
+    pass
+
+# Often BETTER: Flatter with composition
+class Human:
+    def __init__(self):
+        self.biology = BiologySystem()
+        self.movement = MovementSystem()
+```
+
+---
+
+## **Composition vs Inheritance**
+
+### **The Classic Dilemma**
+
+```python
+# Inheritance approach
+class Bird:
+    def fly(self):
+        return "Flying"
+
+class Duck(Bird):
+    pass
+
+class Penguin(Bird):
+    def fly(self):  # Problem: Penguins can't fly!
+        raise NotImplementedError("Penguins can't fly!")
+
+# Composition approach (better)
+class FlyingAbility:
+    def fly(self):
+        return "Flying"
+
+class SwimmingAbility:
+    def swim(self):
+        return "Swimming"
+
+class Duck:
+    def __init__(self):
+        self.flying = FlyingAbility()
+        self.swimming = SwimmingAbility()
+
+class Penguin:
+    def __init__(self):
+        self.swimming = SwimmingAbility()
+        # No flying ability - problem solved!
+```
+
+**Favor composition over inheritance** when:
+
+- Relationship is "has-a" not "is-a"
+- You need flexibility to change behavior at runtime
+- Multiple inheritance would be needed
+- Inheritance hierarchy becomes complex
+
+---
+
+## **Common Pitfalls**
+
+### **1. The Fragile Base Class Problem**
+
+```python
+# Parent class
+class Base:
+    def method_a(self):
+        return self.method_b()
+    
+    def method_b(self):
+        return "Base B"
+
+# Child overrides method_b
+class Child(Base):
+    def method_b(self):
+        return "Child B"
+
+child = Child()
+print(child.method_a())  # "Child B" - might be unexpected!
+# Parent method_a calls overridden method_b
+```
+
+**Lesson**: Changes to parent can break children, and vice versa.
+
+### **2. The Diamond Problem**
+
+```python
+class A:
+    def method(self):
+        return "A"
+
+class B(A):
+    def method(self):
+        return "B"
+
+class C(A):
+    def method(self):
+        return "C"
+
+class D(B, C):  # Multiple inheritance
+    pass
+
+# Diamond:
+#     A
+#    / \
+#   B   C
+#    \ /
+#     D
+
+d = D()
+print(d.method())  # Which one? B or C?
+# Python uses MRO: D → B → C → A
+# Answer: "B"
+```
+
+**Lesson**: Multiple inheritance requires careful MRO understanding.
+
+### **3. Yo-Yo Problem**
+
+```python
+# Deep hierarchy - hard to understand flow
+class A:
+    def method(self):
+        super().method()
+        print("A")
+
+class B(A):
+    def method(self):
+        super().method()
+        print("B")
+
+class C(B):
+    def method(self):
+        super().method()
+        print("C")
+
+class D(C):
+    def method(self):
+        super().method()
+        print("D")
+
+# Control flow bounces up and down the hierarchy
+```
+
+**Lesson**: Keep hierarchies shallow (2-3 levels max).
+
+---
+
+## **Best Practices**
+
+1. **Use inheritance for "is-a" relationships**
+2. **Keep hierarchies shallow** (2-3 levels)
+3. **Favor composition over inheritance** when in doubt
+4. **Make abstract base classes** for contracts
+5. **Use `super()`** for proper method chaining
+6. **Don't override methods unnecessarily**
+7. **Document inheritance relationships**
+8. **Avoid multiple inheritance** unless necessary
+
+---
+
+## **Key Takeaways**
+
+**Inheritance allows**:
+
+- Code reuse through parent-child relationships
+- Specialization of behavior
+- Polymorphic behavior
+- Natural modeling of hierarchies
+
+**Remember the principle**:
+
+- **"Is-a"** → Inheritance
+- **"Has-a"** → Composition
+- **"Can-do"** → Interface/Protocol
+
+**When you add inheritance, ask**:
+
+- Is this a true "is-a" relationship?
+- Could composition work better?
+- Am I creating deep hierarchies?
+- Will this be easy to maintain?
+
+Inheritance is powerful but should be used judiciously. Modern programming often favors composition and interfaces over deep inheritance hierarchies.
+
+
 - SOLID principles
     
 - Coupling vs Cohesion
