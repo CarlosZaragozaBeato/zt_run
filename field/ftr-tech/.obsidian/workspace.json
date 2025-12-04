@@ -20,8 +20,37 @@
               "icon": "lucide-file",
               "title": "🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING"
             }
+          },
+          {
+            "id": "51da6e26af9df9de",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "running/estiramientos.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "estiramientos"
+            }
+          },
+          {
+            "id": "ce6808c9c1e7dd72",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "dieta.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "dieta"
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -78,7 +107,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
+    "width": 200,
     "collapsed": true
   },
   "right": {
@@ -181,14 +210,17 @@
       "bases:Create new base": false
     }
   },
-  "active": "aabe43c21306444d",
+  "active": "51da6e26af9df9de",
   "lastOpenFiles": [
-    "phases/phases.md",
-    "phase1/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
-    "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
-    "books/md.md",
-    "books",
+    "dieta.md",
+    "running/estiramientos.md",
     "20251201_FIELDS.md",
+    "phase1/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
+    "running",
+    "books/md.md",
+    "phases/phases.md",
+    "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
+    "books",
     "phase1/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
     "guitar/routine.md",
     "guitar",
