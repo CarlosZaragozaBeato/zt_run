@@ -1651,7 +1651,7 @@ perf stat -e cache-references,cache-misses ./program
 
 **Golden rule**: Access memory in the order it's laid out physically. The closer your access pattern is to sequential, the faster your code runs.
 
-## When to use:
+# When to use:
 These are fundamental decisions in choosing data structures. Let's explore when to use each based on your specific needs.
 
 ---
@@ -1661,7 +1661,6 @@ These are fundamental decisions in choosing data structures. Let's explore when 
 ## **Arrays (Static/Dynamic Arrays)**
 
 **Best for**:
-
 - **Known or predictable size**
 - **Frequent random access** by index
 - **Cache performance matters**
@@ -2449,23 +2448,927 @@ Need key-value storage?
 
 The key is understanding your access patterns and requirements. Choose the simplest structure that meets your needs—premature optimization with complex structures often backfires.
 
-Would you like to explore specific scenarios in more depth, see performance benchmarks, or learn about more specialized data structures?
+# 4️⃣ Algorithms Theory
+
+# Searching & Sorting principles
+Searching and sorting are foundational algorithmic problems. Almost every program searches for data or organizes it in some way. Understanding these principles gives you the tools to solve countless real-world problems efficiently.
+
+---
+
+# **Searching Principles**
+
+Searching means finding a specific element in a collection of data. The efficiency depends on how the data is organized.
+
+---
+
+## **Linear Search**
+
+**Concept**: Check every element one by one until you find the target or reach the end.
+
+**Algorithm**:
+
+```python
+def linear_search(arr, target):
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i  # Found at index i
+    return -1  # Not found
+```
+
+**How it works**:
+
+```
+Array: [5, 2, 8, 1, 9, 3]
+Search for: 9
+
+Check 5 → No
+Check 2 → No
+Check 8 → No
+Check 1 → No
+Check 9 → Yes! Found at index 4
+```
+
+**Time Complexity**:
+
+- Best case: O(1) — element is first
+- Worst case: O(n) — element is last or not present
+- Average case: O(n) — check half the elements
+
+**Space Complexity**: O(1) — no extra memory needed
+
+**When to use**:
+
+- Small datasets (< 100 elements)
+- Unsorted data (only option if data isn't sorted)
+- One-time searches
+- When simplicity matters more than speed
+
+**Advantages**:
+
+- Simple to implement
+- Works on any data structure (arrays, linked lists)
+- Works on unsorted data
+- No preprocessing needed
+
+**Disadvantages**:
+
+- Slow for large datasets
+- Doesn't leverage any structure/ordering
+
+---
+
+## **Binary Search**
+
+**Concept**: Repeatedly divide sorted data in half, eliminating half the remaining elements each step.
+
+**Prerequisite**: Data MUST be sorted.
+
+**Algorithm**:
+
+```python
+def binary_search(arr, target):
+    left = 0
+    right = len(arr) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
         
+        if arr[mid] == target:
+            return mid  # Found!
+        elif arr[mid] < target:
+            left = mid + 1  # Search right half
+        else:
+            right = mid - 1  # Search left half
+    
+    return -1  # Not found
+```
 
+**How it works**:
 
+```
+Sorted array: [1, 2, 3, 5, 8, 9, 15, 20, 25]
+Search for: 9
 
+Step 1: Check middle (8)
+[1, 2, 3, 5, 8 | 9, 15, 20, 25]
+           ^
+8 < 9, so search right half
 
-## 4️⃣ Algorithms Theory
+Step 2: Check middle of right half (15)
+[9, 15, 20, 25]
+    ^
+15 > 9, so search left half
 
-- Searching & Sorting principles
+Step 3: Check middle of [9] (9)
+[9]
+ ^
+Found! Return index 5
+```
+
+**Why it's faster**:
+
+```
+Linear search: Check all n elements
+Binary search: Halve the search space each time
+
+Array of 1,000,000 elements:
+- Linear: Up to 1,000,000 comparisons
+- Binary: At most 20 comparisons (log₂ 1,000,000 ≈ 20)
+
+That's a 50,000× speedup!
+```
+
+**Time Complexity**:
+
+- Best case: O(1) — element is at the middle
+- Worst case: O(log n) — keep dividing until one element
+- Average case: O(log n)
+
+**Space Complexity**:
+
+- Iterative: O(1)
+- Recursive: O(log n) — call stack depth
+
+**Recursive version**:
+
+```python
+def binary_search_recursive(arr, target, left, right):
+    if left > right:
+        return -1  # Not found
     
-- Divide & Conquer
+    mid = (left + right) // 2
     
-- Greedy algorithms
+    if arr[mid] == target:
+        return mid
+    elif arr[mid] < target:
+        return binary_search_recursive(arr, target, mid + 1, right)
+    else:
+        return binary_search_recursive(arr, target, left, mid - 1)
+```
+
+**When to use**:
+
+- **Sorted data** (or worth sorting first if many searches)
+- Large datasets (> 100 elements)
+- Repeated searches on same data
+- When logarithmic time is needed
+
+**Advantages**:
+
+- Extremely fast: O(log n)
+- Efficient for large datasets
+- Predictable performance
+
+**Disadvantages**:
+
+- **Requires sorted data**
+- Only works on random-access structures (arrays, not linked lists)
+- Overhead not worth it for tiny datasets
+
+**Variants**:
+
+**1. Find first occurrence (if duplicates)**:
+
+```python
+def binary_search_first(arr, target):
+    left, right = 0, len(arr) - 1
+    result = -1
     
-- Dynamic Programming (concept only)
+    while left <= right:
+        mid = (left + right) // 2
+        
+        if arr[mid] == target:
+            result = mid
+            right = mid - 1  # Continue searching left
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
     
-- Graph traversal logic (BFS/DFS)
+    return result
+```
+
+**2. Find insertion point**:
+
+```python
+def binary_search_insert_position(arr, target):
+    left, right = 0, len(arr)
     
-- Optimization problems
+    while left < right:
+        mid = (left + right) // 2
+        if arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid
     
+    return left  # Position where target should be inserted
+```
+
+---
+
+## **Other Search Techniques**
+
+### **Hash-based Search**
+
+Using a hash table for O(1) average-case search:
+
+```python
+# Build hash table
+hash_table = {}
+for i, value in enumerate(arr):
+    hash_table[value] = i
+
+# Search
+if target in hash_table:
+    index = hash_table[target]  # O(1) lookup
+```
+
+**When to use**: Frequent searches, don't need to preserve order, have extra memory
+
+### **Interpolation Search**
+
+Like binary search but uses value to guess position (for uniformly distributed data):
+
+```python
+# Instead of always checking middle:
+# Estimate position based on value
+pos = left + ((target - arr[left]) * (right - left)) // (arr[right] - arr[left])
+```
+
+**Time Complexity**: O(log log n) for uniform data, O(n) worst case
+
+**When to use**: Large sorted arrays with uniformly distributed values (like phone books)
+
+### **Exponential Search**
+
+Find range where element exists, then binary search:
+
+```python
+def exponential_search(arr, target):
+    if arr[0] == target:
+        return 0
+    
+    # Find range
+    i = 1
+    while i < len(arr) and arr[i] <= target:
+        i *= 2
+    
+    # Binary search in range [i//2, min(i, len(arr)-1)]
+    return binary_search(arr, target, i // 2, min(i, len(arr) - 1))
+```
+
+**When to use**: Unbounded/infinite arrays, when element is likely near beginning
+
+---
+
+## **Search Comparison**
+
+| Algorithm         | Time Complexity | Space | Requirements                 |
+| ----------------- | --------------- | ----- | ---------------------------- |
+| **Linear**        | O(n)            | O(1)  | None                         |
+| **Binary**        | O(log n)        | O(1)  | Sorted array                 |
+| **Hash**          | O(1) average    | O(n)  | Extra memory                 |
+| **Interpolation** | O(log log n)    | O(1)  | Sorted, uniform distribution |
+
+**Decision tree**:
+
+```
+Is data sorted?
+├─ No → Can you sort it?
+│       ├─ Yes & multiple searches → Sort then use Binary Search
+│       └─ No or one search → Linear Search
+└─ Yes → Is data large (>100 elements)?
+        ├─ Yes → Binary Search
+        └─ No → Linear Search (simpler)
+```
+
+---
+
+# **Sorting Principles**
+
+Sorting arranges data in a specific order (ascending or descending). It's one of the most studied algorithmic problems because:
+
+- It's a prerequisite for binary search
+- It makes data easier to understand/analyze
+- Many algorithms assume sorted input
+
+---
+
+## **Simple Sorting Algorithms** (O(n²))
+
+These are easy to understand but slow for large datasets.
+
+### **Bubble Sort**
+
+**Concept**: Repeatedly swap adjacent elements if they're in wrong order. Largest elements "bubble" to the end.
+
+**Algorithm**:
+
+```python
+def bubble_sort(arr):
+    n = len(arr)
+    
+    for i in range(n):
+        swapped = False
+        
+        # Last i elements are already in place
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        
+        # If no swaps, array is sorted
+        if not swapped:
+            break
+```
+
+**Visualization**:
+
+```
+Pass 1: [5, 2, 8, 1, 9]
+        [2, 5, 8, 1, 9]  (swap 5,2)
+        [2, 5, 1, 8, 9]  (swap 8,1)
+        [2, 5, 1, 8, 9]  (9 in place)
+
+Pass 2: [2, 5, 1, 8, 9]
+        [2, 1, 5, 8, 9]  (swap 5,1)
+        [2, 1, 5, 8, 9]  (8 in place)
+
+Pass 3: [1, 2, 5, 8, 9]  (swap 2,1)
+        (5 in place)
+
+Pass 4: [1, 2, 5, 8, 9]  (no swaps, done!)
+```
+
+**Time Complexity**:
+
+- Best case: O(n) — already sorted, one pass
+- Worst case: O(n²) — reverse sorted
+- Average case: O(n²)
+
+**Space Complexity**: O(1) — in-place sorting
+
+**When to use**:
+
+- Teaching/learning sorting concepts
+- Already nearly sorted data
+- Very small datasets (< 10 elements)
+- **Rarely used in practice** (too slow)
+
+---
+
+### **Selection Sort**
+
+**Concept**: Find the minimum element and put it at the beginning. Repeat for remaining elements.
+
+**Algorithm**:
+
+```python
+def selection_sort(arr):
+    n = len(arr)
+    
+    for i in range(n):
+        # Find minimum in remaining array
+        min_idx = i
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        
+        # Swap with position i
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+```
+
+**Visualization**:
+
+```
+[5, 2, 8, 1, 9]
+
+Pass 1: Find min (1), swap with position 0
+[1 | 2, 8, 5, 9]
+
+Pass 2: Find min in rest (2), already at position 1
+[1, 2 | 8, 5, 9]
+
+Pass 3: Find min in rest (5), swap with position 2
+[1, 2, 5 | 8, 9]
+
+Pass 4: Find min in rest (8), already at position 3
+[1, 2, 5, 8 | 9]
+
+Done: [1, 2, 5, 8, 9]
+```
+
+**Time Complexity**:
+
+- All cases: O(n²) — always scans remaining array
+
+**Space Complexity**: O(1)
+
+**When to use**:
+
+- When swaps are expensive (e.g., large records)
+- Very small datasets
+- Memory is extremely limited
+
+**Advantage over Bubble Sort**: Fewer swaps (n-1 swaps vs potentially n² swaps)
+
+---
+
+### **Insertion Sort**
+
+**Concept**: Build sorted array one element at a time by inserting each new element into its correct position.
+
+**Algorithm**:
+
+```python
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        
+        # Shift elements greater than key to the right
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        
+        # Insert key at correct position
+        arr[j + 1] = key
+```
+
+**Visualization**:
+
+```
+[5, 2, 8, 1, 9]
+
+Start: [5] | 2, 8, 1, 9  (first element sorted)
+
+Step 1: Insert 2
+[2, 5] | 8, 1, 9
+
+Step 2: Insert 8
+[2, 5, 8] | 1, 9
+
+Step 3: Insert 1
+[1, 2, 5, 8] | 9
+
+Step 4: Insert 9
+[1, 2, 5, 8, 9]
+```
+
+**Time Complexity**:
+
+- Best case: O(n) — already sorted, just scan
+- Worst case: O(n²) — reverse sorted
+- Average case: O(n²)
+
+**Space Complexity**: O(1)
+
+**When to use**:
+
+- **Small datasets** (< 50 elements) — very efficient
+- **Nearly sorted data** — almost O(n)
+- **Online algorithm** — can sort data as it arrives
+- As part of hybrid algorithms (Timsort uses it)
+
+**Advantages**:
+
+- Simple and efficient for small/nearly sorted data
+- Stable (preserves order of equal elements)
+- Online (can process streaming data)
+- Adaptive (fast on nearly sorted data)
+
+**Real-world usage**: Insertion sort is the go-to for small subarrays in advanced algorithms like Quicksort and Mergesort.
+
+---
+
+## **Efficient Sorting Algorithms** (O(n log n))
+
+These are the workhorses of real-world sorting.
+
+### **Merge Sort**
+
+**Concept**: Divide array in half recursively until single elements, then merge sorted halves.
+
+**Divide and Conquer strategy**:
+
+1. **Divide**: Split array in half
+2. **Conquer**: Recursively sort both halves
+3. **Combine**: Merge two sorted halves
+
+**Algorithm**:
+
+```python
+def merge_sort(arr):
+    if len(arr) <= 1:
+        return arr
+    
+    # Divide
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    # Conquer (merge)
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    
+    # Merge both sorted arrays
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    
+    # Add remaining elements
+    result.extend(left[i:])
+    result.extend(right[j:])
+    
+    return result
+```
+
+**Visualization**:
+
+```
+[5, 2, 8, 1, 9, 3, 7, 6]
+
+Divide:
+[5, 2, 8, 1] | [9, 3, 7, 6]
+[5, 2] [8, 1] | [9, 3] [7, 6]
+[5] [2] [8] [1] | [9] [3] [7] [6]
+
+Merge:
+[2, 5] [1, 8] | [3, 9] [6, 7]
+[1, 2, 5, 8] | [3, 6, 7, 9]
+[1, 2, 3, 5, 6, 7, 8, 9]
+```
+
+**Merging example**:
+
+```
+Merge [2, 5] and [1, 8]:
+
+Compare 2 vs 1: Take 1 → [1]
+Compare 2 vs 8: Take 2 → [1, 2]
+Compare 5 vs 8: Take 5 → [1, 2, 5]
+Only 8 left: Take 8 → [1, 2, 5, 8]
+```
+
+**Time Complexity**:
+
+- All cases: O(n log n)
+    - Dividing: log n levels (halve each time)
+    - Merging each level: O(n) work
+    - Total: O(n) × O(log n) = O(n log n)
+
+**Space Complexity**: O(n) — needs temporary arrays for merging
+
+**When to use**:
+
+- **Guaranteed O(n log n)** performance (no worst case)
+- **Stable sort** needed (preserves relative order)
+- Sorting linked lists (works well without random access)
+- **External sorting** (sorting data that doesn't fit in memory)
+
+**Advantages**:
+
+- Predictable O(n log n) — no bad cases
+- Stable
+- Good for linked lists
+- Parallelizes well
+
+**Disadvantages**:
+
+- Requires O(n) extra space
+- Not in-place
+- Slower than Quicksort in practice (more memory operations)
+
+---
+
+### **Quick Sort**
+
+**Concept**: Pick a pivot element, partition array so elements < pivot are left, elements > pivot are right. Recursively sort both sides.
+
+**Algorithm**:
+
+```python
+def quick_sort(arr, low, high):
+    if low < high:
+        # Partition and get pivot index
+        pivot_idx = partition(arr, low, high)
+        
+        # Sort left and right of pivot
+        quick_sort(arr, low, pivot_idx - 1)
+        quick_sort(arr, pivot_idx + 1, high)
+
+def partition(arr, low, high):
+    # Choose last element as pivot
+    pivot = arr[high]
+    i = low - 1
+    
+    # Place elements smaller than pivot to left
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+    
+    # Place pivot in correct position
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+```
+
+**Visualization**:
+
+```
+[5, 2, 8, 1, 9, 3]
+
+Choose pivot: 3
+Partition: [2, 1, 3, 5, 9, 8]
+           (< 3)  ^  (> 3)
+
+Recursively sort [2, 1] and [5, 9, 8]:
+
+Left [2, 1]:
+  Pivot: 1
+  Result: [1, 2]
+
+Right [5, 9, 8]:
+  Pivot: 8
+  Partition: [5, 8, 9]
+  
+Final: [1, 2, 3, 5, 8, 9]
+```
+
+**Partition example**:
+
+```
+[5, 2, 8, 1, 9, 3]  Pivot = 3
+
+i = -1
+
+j=0: 5 > 3, skip
+j=1: 2 ≤ 3, i=0, swap arr[0] and arr[1]
+     [2, 5, 8, 1, 9, 3]
+j=2: 8 > 3, skip
+j=3: 1 ≤ 3, i=1, swap arr[1] and arr[3]
+     [2, 1, 8, 5, 9, 3]
+j=4: 9 > 3, skip
+
+Place pivot: swap arr[2] (i+1) and arr[5] (pivot)
+[2, 1, 3, 5, 9, 8]
+       ^
+    pivot at index 2
+```
+
+**Time Complexity**:
+
+- Best case: O(n log n) — pivot divides evenly
+- Average case: O(n log n)
+- Worst case: O(n²) — pivot is always min/max (rare with good pivot selection)
+
+**Space Complexity**: O(log n) — recursive call stack
+
+**Pivot selection strategies**:
+
+1. **Last element**: Simple but can be O(n²) on sorted data
+2. **Random element**: Avoids worst case in practice
+3. **Median-of-three**: Choose median of first, middle, last elements
+4. **Median-of-medians**: Guarantees O(n log n) but complex
+
+**When to use**:
+
+- **Most common general-purpose sort**
+- In-place sorting needed (low memory)
+- Average-case performance matters more than worst-case
+- Random data (not adversarial)
+
+**Advantages**:
+
+- **Fastest in practice** for average case
+- In-place (O(log n) space only)
+- Cache-friendly (good locality)
+- Easy to parallelize
+
+**Disadvantages**:
+
+- Unstable (doesn't preserve order of equal elements)
+- O(n²) worst case (mitigated by randomization)
+- Slower on small arrays (switch to insertion sort)
+
+**Optimizations**:
+
+```python
+def quick_sort_optimized(arr, low, high):
+    # Use insertion sort for small subarrays
+    if high - low < 10:
+        insertion_sort(arr, low, high)
+        return
+    
+    # Median-of-three pivot
+    mid = (low + high) // 2
+    if arr[mid] < arr[low]:
+        arr[low], arr[mid] = arr[mid], arr[low]
+    if arr[high] < arr[low]:
+        arr[low], arr[high] = arr[high], arr[low]
+    if arr[mid] < arr[high]:
+        arr[mid], arr[high] = arr[high], arr[mid]
+    
+    pivot_idx = partition(arr, low, high)
+    quick_sort_optimized(arr, low, pivot_idx - 1)
+    quick_sort_optimized(arr, pivot_idx + 1, high)
+```
+
+---
+
+### **Heap Sort**
+
+**Concept**: Build a max heap, repeatedly extract the maximum element and rebuild heap.
+
+**Algorithm**:
+
+```python
+def heap_sort(arr):
+    n = len(arr)
+    
+    # Build max heap
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+    
+    # Extract elements one by one
+    for i in range(n - 1, 0, -1):
+        # Move current root (max) to end
+        arr[0], arr[i] = arr[i], arr[0]
+        
+        # Heapify reduced heap
+        heapify(arr, i, 0)
+
+def heapify(arr, n, i):
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
+    
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+    
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+    
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        heapify(arr, n, largest)
+```
+
+**Time Complexity**: O(n log n) all cases
+
+**Space Complexity**: O(1) — in-place
+
+**When to use**:
+
+- Need guaranteed O(n log n) AND in-place
+- Priority queue operations needed
+- Embedded systems (predictable performance, no extra memory)
+
+**Advantages**:
+
+- Guaranteed O(n log n)
+- In-place
+- No worst-case like Quicksort
+
+**Disadvantages**:
+
+- Not stable
+- Slower than Quicksort in practice
+- Poor cache performance (random access pattern)
+
+---
+
+## **Specialized Sorting Algorithms**
+
+### **Counting Sort** (O(n + k))
+
+For integers in a known range [0, k]:
+
+```python
+def counting_sort(arr, max_val):
+    count = [0] * (max_val + 1)
+    
+    # Count occurrences
+    for num in arr:
+        count[num] += 1
+    
+    # Reconstruct sorted array
+    result = []
+    for num in range(max_val + 1):
+        result.extend([num] * count[num])
+    
+    return result
+```
+
+**When to use**: Small range of integers (k ≈ n)
+
+### **Radix Sort** (O(d × n))
+
+Sort by each digit/character:
+
+```python
+def radix_sort(arr):
+    max_num = max(arr)
+    exp = 1
+    
+    while max_num // exp > 0:
+        counting_sort_by_digit(arr, exp)
+        exp *= 10
+```
+
+**When to use**: Fixed-length integers or strings
+
+### **Bucket Sort** (O(n) average)
+
+Distribute elements into buckets, sort buckets, concatenate:
+
+```python
+def bucket_sort(arr):
+    buckets = [[] for _ in range(10)]
+    
+    for num in arr:
+        bucket_idx = int(num * 10)  # Assumes numbers in [0, 1)
+        buckets[bucket_idx].append(num)
+    
+    for bucket in buckets:
+        bucket.sort()  # Use any sorting algorithm
+    
+    return [num for bucket in buckets for num in bucket]
+```
+
+**When to use**: Uniformly distributed data
+
+---
+
+## **Sorting Algorithm Comparison**
+
+| Algorithm     | Time (Best) | Time (Avg) | Time (Worst) | Space    | Stable | Notes                         |
+| ------------- | ----------- | ---------- | ------------ | -------- | ------ | ----------------------------- |
+| **Bubble**    | O(n)        | O(n²)      | O(n²)        | O(1)     | Yes    | Teaching only                 |
+| **Selection** | O(n²)       | O(n²)      | O(n²)        | O(1)     | No     | Few swaps                     |
+| **Insertion** | O(n)        | O(n²)      | O(n²)        | O(1)     | Yes    | Great for small/nearly sorted |
+| **Merge**     | O(n log n)  | O(n log n) | O(n log n)   | O(n)     | Yes    | Predictable, stable           |
+| **Quick**     | O(n log n)  | O(n log n) | O(n²)        | O(log n) | No     | Fastest in practice           |
+| **Heap**      | O(n log n)  | O(n log n) | O(n log n)   | O(1)     | No     | In-place, guaranteed          |
+| **Counting**  | O(n+k)      | O(n+k)     | O(n+k)       | O(k)     | Yes    | Small integer range           |
+| **Radix**     | O(d×n)      | O(d×n)     | O(d×n)       | O(n+k)   | Yes    | Fixed-length data             |
+
+---
+
+## **Choosing a Sorting Algorithm**
+
+**Decision flowchart**:
+
+```
+What type of data?
+├─ Small integers in known range → Counting/Radix Sort
+├─ Fixed-length strings/numbers → Radix Sort
+├─ General comparison-based:
+    │
+    ├─ Small array (< 50) → Insertion Sort
+    ├─ Need stability → Merge Sort
+    ├─ Limited memory → Heap Sort or in-place Quick Sort
+    ├─ Guaranteed O(n log n) → Merge Sort or Heap Sort
+    └─ General purpose → Quick Sort (most common)
+```
+
+**Real-world implementations**:
+
+- **Python's `sorted()`**: Timsort (hybrid of Merge + Insertion)
+- **Java's `Arrays.sort()`**: Dual-Pivot Quicksort (primitives), Timsort (objects)
+- **C++ `std::sort()`**: Introsort (hybrid of Quick + Heap + Insertion)
+- **JavaScript `Array.sort()`**: Timsort (V8 engine)
+
+These hybrid algorithms combine the best properties of multiple approaches!
+
+---
+
+## **Key Principles Summary**
+
+**Searching**:
+
+- Linear for unsorted/small data
+- Binary for sorted large data
+- Hash tables for repeated lookups
+
+**Sorting**:
+
+- Simple algorithms (O(n²)): Good for learning, small data, nearly sorted data
+- Efficient algorithms (O(n log n)): General purpose, large data
+- Specialized algorithms: Specific data types/distributions
+
+**Trade-offs**:
+
+- Time vs Space (Merge uses O(n) space, Quick uses O(log n))
+- Best case vs Worst case (Quick fast on average, bad worst case)
+- Stability vs Performance (Stable sorts preserve order but may be slower)
+- Simplicity vs Efficiency (Bubble is simple but slow)
+
+The "best" algorithm depends on your specific constraints: data size, data type, memory limits, stability requirements, and whether data is already partially sorted.
