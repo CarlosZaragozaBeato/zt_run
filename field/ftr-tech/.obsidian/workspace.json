@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
+                "file": "phase1/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "🏗️ PHASE 2 — DATA & LOGIC MASTERY"
+              "title": "🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING"
             }
           }
         ]
@@ -183,10 +183,11 @@
   },
   "active": "aabe43c21306444d",
   "lastOpenFiles": [
+    "phases/phases.md",
+    "phase1/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
+    "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
     "books/md.md",
     "books",
-    "phases/phases.md",
-    "phase1/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
     "20251201_FIELDS.md",
     "phase1/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
     "guitar/routine.md",
