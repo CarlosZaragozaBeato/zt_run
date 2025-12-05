@@ -7,6 +7,38 @@ def main():
     pass
 
 
+def character_replacement(s, k):
+    freq = [0] * 26
+    left = 0
+    max_count = 0
+    max_length = 0
+
+    for right in range(len(s)):
+        index = ord(s[right]) - ord("A")
+        freq[index] += 1
+
+        max_count = max(max_count, freq[index])
+        while (right - left + 1) - max_count > k:
+            freq[ord(s[left]) - ord("A")] -= 1
+            left += 1
+        max_length = max(max_length, right - left + 1)
+    return max_length
+
+
+def length_of_longest_substring(s: str) -> int:
+    char_set = set()
+    left = 0
+    max_length = 0
+
+    for right in range(len(s)):
+        while s[right] in char_set:
+            char_set.remove(s[left])
+            left += 1
+        char_set.add(s[right])
+        max_length = max(max_length, right - left + 1)
+    return max_length
+
+
 def maxProfit(prices):
     if not prices:
         return 0
