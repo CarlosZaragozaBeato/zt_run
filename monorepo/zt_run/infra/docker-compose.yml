@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  zt_run-postgres:
+    image: postgres:16
+    container_name: zt_run-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: zt_run
+    ports:
+      - "5432:5432"
+    volumes:
+      - zt_run_pgdata:/var/lib/postgresql/data
+
+  zt_run-redis:
+    image: redis:7
+    container_name: zt_run-redis
+    ports:
+      - "6379:6379"
+
+  zt_run-minio:
+    image: minio/minio
+    container_name: zt_run-minio
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - zt_run_minio:/data
+
+  zt_run-api:
+    build: ../apps/api
+    container_name: zt_run-api
+    env_file:
+      - ../.env
+    depends_on:
+      - zt_run-postgres
+      - zt_run-redis
+      - zt_run-minio
+    ports:
+      - "3000:3000"
+    command: pnpm dev
+    volumes:
+      - ../apps/api:/app
+      - /app/node_modules
+
+  zt_run-web:
+    build: ../apps/web
+    container_name: zt_run-web
+    ports:
+      - "5173:5173"
+    command: pnpm dev
+    volumes:
+      - ../apps/web:/app
+      - /app/node_modules
+
+volumes:
+  zt_run_pgdata:
+  zt_run_minio:
+
+

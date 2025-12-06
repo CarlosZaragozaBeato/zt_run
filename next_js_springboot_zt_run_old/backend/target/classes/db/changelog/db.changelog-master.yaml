@@ -1,0 +1,14 @@
+databaseChangeLog:
+  # ========================================
+  # SCHEMA - Creación de tablas LOGIN
+  # DATA   - Inserción de datos iniciales LOGIN
+  # ========================================
+  - include:
+      file: login/login-changes.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: goals/goals-changes.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: calendar/calendar-changes.yaml
+      relativeToChangelogFile: true

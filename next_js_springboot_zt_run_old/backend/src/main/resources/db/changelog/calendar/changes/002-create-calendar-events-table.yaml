@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-calendar-events-table
+      author: carlos
+      changes:
+        - createTable:
+            tableName: calendar_events
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_calendar_events_users
+                    references: users(id)
+              - column:
+                  name: goal_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_calendar_events_goals
+                    references: goals(id)
+              - column:
+                  name: title
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: start_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_all_day
+                  type: BOOLEAN
+                  defaultValue: false
+              - column:
+                  name: location
+                  type: VARCHAR(255)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: SCHEDULED
+              - column:
+                  name: event_type
+                  type: VARCHAR(20)
+                  defaultValue: GENERIC
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+      rollback:
+        - dropTable:
+            tableName: calendar_events
