@@ -5,6 +5,78 @@ public class Main {
 
   }
 
+  public String minWindow(String s, String t) {
+    if (t.length() > s.length())
+      return "";
+
+    Map<Character, Integer> tMap = new HashMap<>();
+    for (char c : t.toCharArray()) {
+      tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+    }
+    Map<Character, Integer> window = new HashMap<>();
+
+    int have = 0;
+    int need = tMap.size();
+
+    int left = 0;
+    int minLen = Integer.MAX_VALUE;
+    int start = 0;
+
+    for (int i = 0; right < s.length(); right++) {
+      char c = s.charAt(right);
+      window.put(c, window.getOrDefault(c, 0) + 1);
+
+      if (tMap.containsKey(c) &&
+          window.get(c).intValue() == tMap.get(c).intValue()) {
+        have++;
+      }
+
+      while (have == need) {
+        if ((right - left + 1) < minLen) {
+          minLen = right - left + 1;
+          start = left;
+        }
+        char remove = s.charAt(left);
+        window.put(remove, window.get(remove) - 1);
+        if (tMap.containsKey(remove) &&
+            window.get(remove) < tMap.get(remove)) {
+          have--;
+        }
+        left++;
+      }
+    }
+    return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+
+  }
+
+  public static boolean checkInclusion(String s1, String s2) {
+    if (s1.length() > s2.length())
+      return false;
+
+    int[] freq1 = new int[26];
+    int[] freq2 = new int[26];
+
+    for (char c : s1.toCharArray()) {
+      freq1[c - 'a']++;
+    }
+    int window = s1.length();
+
+    for (int i = 0; i < window; i++) {
+      freq2[s2.charAt(i) - 'a']++;
+    }
+    if (matches(freq1, freq2))
+      return true;
+
+    for (int i = window; i < s2.length(); i++) {
+      freq2[s2.charAt(i) - 'a']++;
+      freq2[s2.charAt(i - window) - 'a']--;
+
+      if (matches(freq1, freq2))
+        return true;
+    }
+    return false;
+  }
+
   public int characterReplacement(String s, int k) {
     int[] freq = new int[26];
     int left = 0;

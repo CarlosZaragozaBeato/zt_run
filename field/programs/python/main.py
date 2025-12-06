@@ -1,10 +1,73 @@
 from typing import List
-from collections import defaultdict
+from collections import defaultdict, Counter
 import heapq
 
 
 def main():
     pass
+
+
+def minWindow(s: str, t: str) -> str:
+    if t == "" or len(t) > len(s):
+        return ""
+
+    t_freq = Counter(t)
+    window = {}
+
+    have = 0
+    need = len(t_freq)
+
+    res = [-1, -1]
+    res_len = float("inf")
+
+    left = 0
+
+    for right in range(len(s)):
+        c = s[right]
+        window[c] = window.get(c, 0) + 1
+
+        if c in t_freq and window[c] == t_freq[c]:
+            have += 1
+
+        while have == need:
+            if (right - left + 1) < res_len:
+                res = [left, right]
+                res_len = right - left + 1
+
+            window[s[left]] -= 1
+            if s[left] in t_freq and window[s[left]] < t_freq[s[left]]:
+                have -= 1
+            left += 1
+    l, r = res
+    return s[l : r + 1] if res_len != float("inf") else ""
+
+
+def checkInclusion(s1: str, s2: str) -> bool:
+    if len(s1) > len(s2):
+        return False
+
+    freq1 = [0] * 26
+    freq2 = [0] * 26
+
+    for ch in s1:
+        freq1[ord(ch) - ord("a")] += 1
+
+    window = len(s1)
+
+    for i in range(window):
+        freq2[ord(s2[i]) - ord("a")] += 1
+
+    if freq1 == freq2:
+        return True
+
+    for i in range(window, len(s2)):
+        freq2[ord(s2[i]) - ord("a")] += 1
+        freq2[ord(s2[i - window]) - ord("a")] -= 1
+
+        if freq1 == freq2:
+            return True
+
+    return False
 
 
 def character_replacement(s, k):
