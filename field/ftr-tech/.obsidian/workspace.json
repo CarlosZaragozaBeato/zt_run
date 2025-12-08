@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "phases/🧩 PHASE 6 — BACKEND & SYSTEM DESIGN.md",
+                "file": "index/phases.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "🧩 PHASE 6 — BACKEND & SYSTEM DESIGN"
+              "title": "phases"
             }
           },
           {
@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "zt-run/Structure.md",
+                "file": "phases/🔐 PHASE 8 — SECURITY ENGINEERING.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Structure"
+              "title": "🔐 PHASE 8 — SECURITY ENGINEERING"
             }
           }
         ],
@@ -197,13 +197,14 @@
   },
   "active": "d77452cb1da2eb5a",
   "lastOpenFiles": [
-    "zt-run/Stack.md",
     "zt-run/Structure.md",
+    "index/phases.md",
+    "phases/🔐 PHASE 8 — SECURITY ENGINEERING.md",
+    "phases/🌍 PHASE 7 — DISTRIBUTED SYSTEMS (Advanced).md",
     "phases/🧩 PHASE 6 — BACKEND & SYSTEM DESIGN.md",
+    "zt-run/Stack.md",
     "zt-run",
     "20251201_FIELDS.md",
-    "phases/🌍 PHASE 7 — DISTRIBUTED SYSTEMS (Advanced).md",
-    "index/phases.md",
     "phases/7.md",
     "running/Current WEEK Running.md",
     "running/dieta.md",
