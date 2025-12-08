@@ -5,6 +5,51 @@ public class Main {
 
   }
 
+  public static boolean isValid(String s) {
+    Stack<Character> stack = new Stack<>();
+
+    for (char ch : s.toCharArray()) {
+      if (ch == '(' || ch == '{' || ch == '[') {
+        stack.push(ch);
+      } else {
+        if (stack.isEmpty())
+          return false;
+        char top = stack.pop();
+
+        if ((ch == ')' && top != '(') ||
+            (ch == '}' && top != '{') ||
+            (ch == ']' && top != '[')) {
+          return false;
+        }
+      }
+    }
+    return stack.isEmpty();
+  }
+
+  public static int[] maxSlidingWindow(int[] nums, int k) {
+    Deque<Integer> dq = new ArrayDeque<>();
+    int n = nums.length;
+    int[] result = new int[n - k + 1];
+    int ri = 0;
+
+    for (int i = 0; i < n; i++) {
+      if (!dq.isEmpty() && dq.peekFirst() == i - k) {
+        dq.pollFirst();
+      }
+
+      while (!dq.isEmpty() && nums[dq.peekLast()] < nums[i]) {
+        dq.pollLast();
+      }
+
+      dq.offerLast(i);
+
+      if (i >= k - 1) {
+        result[ri++] = nums[dq.peekFirst()];
+      }
+    }
+    return result;
+  }
+
   public String minWindow(String s, String t) {
     if (t.length() > s.length())
       return "";

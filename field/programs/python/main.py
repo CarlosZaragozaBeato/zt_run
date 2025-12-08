@@ -1,10 +1,47 @@
 from typing import List
-from collections import defaultdict, Counter
+from collections import deque, defaultdict, Counter
 import heapq
 
 
 def main():
     pass
+
+    def isValidParentheses(s: str) -> bool:
+        stack = []
+
+        for ch in s:
+            if ch in "([{":
+                stack.append(ch)
+            else:
+                if not stack:
+                    return False
+                top = stack.pop()
+                if (
+                    (ch == ")" and top != "(")
+                    or (ch == "}" and top != "{")
+                    or (ch == "]" and top != "[")
+                ):
+                    return False
+        return not stack
+
+
+def maxSlidingWindow(nums, k):
+    dq = deque()
+    result = []
+
+    for i in range(len(nums)):
+        if dq and dq[0] == i - k:
+            dq.popleft()
+
+        while dq and nums[dq[-1]] < nums[i]:
+            dq.pop()
+
+        dq.append(i)
+
+        if i >= k - 1:
+            result.append(nums[dq[0]])
+
+    return result
 
 
 def minWindow(s: str, t: str) -> str:

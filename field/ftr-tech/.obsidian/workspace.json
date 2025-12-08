@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "phases/⚙️ PHASE 4 — HOW SOFTWARE REALLY RUNS.md",
+                "file": "phases/🗄️ PHASE 5 — DATA & CONSISTENCY.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "⚙️ PHASE 4 — HOW SOFTWARE REALLY RUNS"
+              "title": "🗄️ PHASE 5 — DATA & CONSISTENCY"
             }
           },
           {
@@ -35,8 +35,7 @@
               "title": "Current WEEK"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -93,8 +92,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "28d1fd587899de7e",
@@ -196,11 +194,12 @@
       "bases:Create new base": false
     }
   },
-  "active": "d874948ea84d2fbb",
+  "active": "1c349e384ce0dc59",
   "lastOpenFiles": [
-    "phases/⚙️ PHASE 4 — HOW SOFTWARE REALLY RUNS.md",
-    "Current WEEK.md",
     "index/phases.md",
+    "phases/🗄️ PHASE 5 — DATA & CONSISTENCY.md",
+    "Current WEEK.md",
+    "phases/⚙️ PHASE 4 — HOW SOFTWARE REALLY RUNS.md",
     "phases/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
     "20251201_FIELDS.md",
     "s.md",
