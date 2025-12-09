@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "index/phases.md",
+                "file": "phases/✅ PHASE 9 — QUALITY & RELIABILITY.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "phases"
+              "title": "✅ PHASE 9 — QUALITY & RELIABILITY"
             }
           },
           {
@@ -27,16 +27,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "phases/🔐 PHASE 8 — SECURITY ENGINEERING.md",
+                "file": "phases/🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "🔐 PHASE 8 — SECURITY ENGINEERING"
+              "title": "🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -93,7 +92,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 200,
+    "collapsed": true
   },
   "right": {
     "id": "28d1fd587899de7e",
@@ -195,12 +195,16 @@
       "bases:Create new base": false
     }
   },
-  "active": "d77452cb1da2eb5a",
+  "active": "1c349e384ce0dc59",
   "lastOpenFiles": [
-    "zt-run/Structure.md",
-    "index/phases.md",
-    "phases/🔐 PHASE 8 — SECURITY ENGINEERING.md",
     "phases/🌍 PHASE 7 — DISTRIBUTED SYSTEMS (Advanced).md",
+    "phases/☁️ PHASE 10 — DEVOPS & CLOUD THEORY.md",
+    "index/phases.md",
+    "phases/🤖 PHASE 11 — AI SYSTEMS THEORY.md",
+    "phases/🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING.md",
+    "phases/✅ PHASE 9 — QUALITY & RELIABILITY.md",
+    "phases/🔐 PHASE 8 — SECURITY ENGINEERING.md",
+    "zt-run/Structure.md",
     "phases/🧩 PHASE 6 — BACKEND & SYSTEM DESIGN.md",
     "zt-run/Stack.md",
     "zt-run",
