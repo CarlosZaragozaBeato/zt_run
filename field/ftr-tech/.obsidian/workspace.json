@@ -78,8 +78,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200,
-    "collapsed": true
+    "width": 200
   },
   "right": {
     "id": "28d1fd587899de7e",
@@ -183,6 +182,7 @@
   },
   "active": "d77452cb1da2eb5a",
   "lastOpenFiles": [
+    "phases/PHASES.MD",
     "index/phases.md",
     "phases/🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING.md",
     "phases/🤖 PHASE 11 — AI SYSTEMS THEORY.md",
