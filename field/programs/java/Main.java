@@ -1,8 +1,70 @@
 import java.util.*;
 
+class MinStack {
+
+  private Stack<Integer> stack;
+  private Stack<Integer> minStack;
+
+  public MinStack() {
+    stack = new Stack<>();
+    minStack = new Stack<>();
+  }
+
+  public void push(int val) {
+    stack.push(val);
+
+    if (minStack.isEmpty() || val <= minStack.peek()) {
+      minStack.push(val);
+    }
+  }
+
+  public void pop() {
+    int removed = stack.pop();
+
+    if (removed == minStack.peek()) {
+      minStack.pop();
+    }
+  }
+
+  public int top() {
+    return stack.peek();
+  }
+
+  public int getMin() {
+    return minStack.peek();
+  }
+}
+
 public class Main {
   public static void main(string args[]) {
 
+  }
+
+  public static int evalRPN(String[] tokens) {
+    Stack<Integer> stack = new Stack<>();
+
+    for (String token : tokens) {
+      if (token.equals("+") || token.equals("-") ||
+          token.equals("*") || token.equals("/")) {
+        int b = stack.pop();
+        int a = stack.pop();
+        int result = 0;
+
+        if (token.equals("+")) {
+          result = a + b;
+        } else if (token.equals("-")) {
+          result = a - b;
+        } else if (token.equals("*")) {
+          result = a * b;
+        } else { // division
+          result = a / b; // truncates toward zero automatically in Java
+        }
+        stack.push(result);
+      } else {
+        stack.push(Integer.parseInt(token));
+      }
+    }
+    return stack.pop();
   }
 
   public static boolean isValid(String s) {
