@@ -40,6 +40,44 @@ public class Main {
 
   }
 
+  public static int carFleet(int target, int[] position, int[] speed){
+    int n = position.length;
+    int[][] cars = new int[n][2];
+    for(int i = 0; i < n; i++){
+      cars[i][0] = position[i];
+      cars[i][1] = speed[i];
+    }
+    Arrays.sort(cars, (a, b) -> b[0] - a[0]);
+
+    int fleets = 0;
+    double slowestTime = 0;
+
+    for (int i = 0; i < n; i++){
+      double time = (double)(target - cars[i][0] / cars[i][1]);
+
+      if (time > slowestTime){
+        fleets++;
+        slowestTime = time;
+      }
+    }
+    return fleets;
+  }
+
+  public int[] dailyTemperatures(int[] temperatures) {
+    int n = temperatures.length;
+    int[] result = new int[n];
+    Stack<Integer> stack = new Stack<>();
+
+    for (int i = 0; i < n; i++) {
+      while (!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
+        int prevIndex = stack.pop();
+        result[prevIndex] = i - prevIndex;
+      }
+      stack.push(i);
+    }
+    return result;
+  }
+
   public static int evalRPN(String[] tokens) {
     Stack<Integer> stack = new Stack<>();
 

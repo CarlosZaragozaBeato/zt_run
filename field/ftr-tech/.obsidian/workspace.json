@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "phases/🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING.md",
+                "file": "running/Current WEEK Running.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING"
+              "title": "Current WEEK Running"
             }
           }
         ]
@@ -182,16 +182,26 @@
   },
   "active": "d77452cb1da2eb5a",
   "lastOpenFiles": [
+<<<<<<< HEAD
     "phases/PHASES.MD",
     "index/phases.md",
+=======
+    "phases/PHASES.md",
+>>>>>>> d85a13a0 (s)
     "phases/🧑‍💼 PHASE 12 — PROFESSIONAL ENGINEERING.md",
     "phases/🤖 PHASE 11 — AI SYSTEMS THEORY.md",
     "phases/☁️ PHASE 10 — DEVOPS & CLOUD THEORY.md",
     "phases/✅ PHASE 9 — QUALITY & RELIABILITY.md",
-    "phases/🌍 PHASE 7 — DISTRIBUTED SYSTEMS (Advanced).md",
     "phases/🔐 PHASE 8 — SECURITY ENGINEERING.md",
-    "zt-run/Structure.md",
+    "phases/🌍 PHASE 7 — DISTRIBUTED SYSTEMS (Advanced).md",
     "phases/🧩 PHASE 6 — BACKEND & SYSTEM DESIGN.md",
+    "phases/🗄️ PHASE 5 — DATA & CONSISTENCY.md",
+    "phases/⚙️ PHASE 4 — HOW SOFTWARE REALLY RUNS.md",
+    "phases/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
+    "phases/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
+    "phases/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
+    "index/phases.md",
+    "zt-run/Structure.md",
     "zt-run/Stack.md",
     "zt-run",
     "20251201_FIELDS.md",
@@ -199,16 +209,11 @@
     "running/Current WEEK Running.md",
     "running/dieta.md",
     "running/estiramientos.md",
-    "phases/🗄️ PHASE 5 — DATA & CONSISTENCY.md",
-    "phases/⚙️ PHASE 4 — HOW SOFTWARE REALLY RUNS.md",
-    "phases/🧱 PHASE 3 — CLEAN CODE & DESIGN THINKING.md",
     "s.md",
     "running/2800kcal Dieta.md",
     "running",
     "books/md.md",
-    "phases/🏗️ PHASE 2 — DATA & LOGIC MASTERY.md",
     "books",
-    "phases/🧠 PHASE 1 — THINK LIKE A COMPUTER (Foundations).md",
     "guitar/routine.md",
     "guitar",
     "index",
