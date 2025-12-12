@@ -1,6 +1,6 @@
 return {
   -- 🌿 Gruvbox (NO soporta transparencia nativa, se fuerza abajo)
-  { "morhetz/gruvbox", name = "gruvbox", lazy = false, priority = 1000 },
+  { "morhetz/gruvbox",      name = "gruvbox", lazy = false, priority = 1000 },
 
   -- 🌑 OneDark (clásico, se fuerza abajo)
   { "joshdick/onedark.vim", name = "onedark", lazy = false, priority = 1000 },
@@ -19,7 +19,7 @@ return {
   },
 
   -- ❄️ Nord (clásico, se fuerza abajo)
-  { "nordtheme/vim", name = "nord", lazy = false, priority = 1000 },
+  { "nordtheme/vim",              name = "nord",       lazy = false, priority = 1000 },
 
   -- 📄 PaperColor (se fuerza abajo)
   { "NLKNguyen/papercolor-theme", name = "papercolor", lazy = false, priority = 1000 },
